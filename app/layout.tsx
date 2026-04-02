@@ -4,6 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { CompareProvider } from "@/lib/compare-store";
 import { CompareBar } from "@/components/CompareBar";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   title: "Academi.kz — Твоя магистратура в Казахстане",
@@ -17,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru">
+    <html lang="ru" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -27,12 +28,14 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <CompareProvider>
-          <Navbar />
-          <main>{children}</main>
-          <CompareBar />
-          <Footer />
-        </CompareProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <CompareProvider>
+            <Navbar />
+            <main>{children}</main>
+            <CompareBar />
+            <Footer />
+          </CompareProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

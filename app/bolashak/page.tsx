@@ -30,9 +30,9 @@ export default function BolashakPage() {
   const [answers, setAnswers] = useState<string[]>([]);
   const [showResult, setShowResult] = useState(false);
 
-  const eligible = answers.every(
-    (ans, i) => ans === BOLASHAK_QUIZ[i].correct
-  );
+  const eligible =
+    answers.length === BOLASHAK_QUIZ.length &&
+    answers.every((ans, i) => ans === BOLASHAK_QUIZ[i].correct);
 
   const handleAnswer = (answer: string) => {
     const newAnswers = [...answers, answer];
@@ -113,7 +113,7 @@ export default function BolashakPage() {
           viewport={{ once: true }}
           className="text-center mb-10"
         >
-          <h2 className="text-2xl sm:text-3xl font-bold text-ink-900" style={{ fontFamily: "var(--font-display)" }}>
+          <h2 className="text-2xl sm:text-3xl font-bold text-ink-900 dark:text-white" style={{ fontFamily: "var(--font-display)" }}>
             Условия участия
           </h2>
         </motion.div>
@@ -125,13 +125,13 @@ export default function BolashakPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white rounded-2xl border border-ink-200 p-5 card-hover text-center"
+              className="bg-white dark:bg-ink-900 rounded-2xl border border-ink-200 dark:border-ink-800 p-5 card-hover text-center"
             >
               <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center mx-auto mb-3">
                 <r.icon className="w-6 h-6 text-amber-600" />
               </div>
-              <h3 className="font-semibold text-ink-900 mb-2">{r.title}</h3>
-              <p className="text-sm text-ink-500 leading-relaxed">{r.desc}</p>
+              <h3 className="font-semibold text-ink-900 dark:text-white mb-2">{r.title}</h3>
+              <p className="text-sm text-ink-500 dark:text-ink-400 leading-relaxed">{r.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -240,7 +240,7 @@ export default function BolashakPage() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-2xl font-bold text-ink-900 mb-6"
+          className="text-2xl font-bold text-ink-900 dark:text-white mb-6"
           style={{ fontFamily: "var(--font-display)" }}
         >
           Партнёрские университеты
@@ -253,10 +253,10 @@ export default function BolashakPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.07 }}
-              className="bg-white border border-ink-200 rounded-xl p-3 text-center card-hover"
+              className="bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl p-3 text-center card-hover"
             >
-              <div className="text-sm font-semibold text-ink-900 mb-0.5">{u.name}</div>
-              <div className="text-xs text-ink-400">{u.country}</div>
+              <div className="text-sm font-semibold text-ink-900 dark:text-white mb-0.5">{u.name}</div>
+              <div className="text-xs text-ink-400 dark:text-ink-500">{u.country}</div>
             </motion.div>
           ))}
         </div>
@@ -268,7 +268,7 @@ export default function BolashakPage() {
       {/* Bolashak programs from catalog */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-ink-900" style={{ fontFamily: "var(--font-display)" }}>
+          <h2 className="text-2xl font-bold text-ink-900 dark:text-white" style={{ fontFamily: "var(--font-display)" }}>
             Программы в Казахстане с Болашак
           </h2>
           <Link href="/programs?bolashak=true" className="text-sm font-medium text-brand-600 flex items-center gap-1 hover:underline">
@@ -283,16 +283,16 @@ export default function BolashakPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-2xl border border-amber-200 p-4 card-hover"
+                className="bg-white dark:bg-ink-900 rounded-2xl border border-amber-200 dark:border-amber-900/50 p-4 card-hover"
               >
                 <div className="tag-pill-gold inline-flex items-center gap-1 mb-2">
                   <Award className="w-3 h-3" /> Болашак
                 </div>
-                <h3 className="font-semibold text-ink-900 text-sm mb-1">{p.title}</h3>
-                <p className="text-xs text-ink-500 mb-3">{p.university}</p>
-                <div className="flex items-center justify-between text-xs text-ink-500">
+                <h3 className="font-semibold text-ink-900 dark:text-white text-sm mb-1">{p.title}</h3>
+                <p className="text-xs text-ink-500 dark:text-ink-400 mb-3">{p.university}</p>
+                <div className="flex items-center justify-between text-xs text-ink-500 dark:text-ink-400">
                   <span>{p.city}</span>
-                  <span className="font-semibold text-ink-900">{p.costLabel}</span>
+                  <span className="font-semibold text-ink-900 dark:text-white">{p.costLabel}</span>
                 </div>
               </motion.div>
             </Link>

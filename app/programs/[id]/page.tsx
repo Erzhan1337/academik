@@ -12,7 +12,7 @@ import {
 import { PROGRAMS } from "@/lib/data";
 import { useCompareStore } from "@/lib/compare-store";
 
-const TABS = ["Обзор", "Требования", "Документы", "Дедлайны"] as const;
+const TABS = ["Обзор", "Требования", "Документы", "Дедлайны", "Отзывы и Q&A"] as const;
 
 export default function ProgramDetailPage({
   params,
@@ -28,8 +28,9 @@ export default function ProgramDetailPage({
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const { items, add, remove } = useCompareStore();
+  const { items, favorites, add, remove, toggleFavorite } = useCompareStore();
   const inCompare = items.some((p) => p.id === program.id);
+  const inFavorites = favorites.some((p) => p.id === program.id);
 
   const toggleDoc = (doc: string) =>
     setChecked((prev) => (prev.includes(doc) ? prev.filter((d) => d !== doc) : [...prev, doc]));
@@ -208,6 +209,62 @@ export default function ProgramDetailPage({
                     </p>
                   </motion.div>
                 )}
+                {tab === "Отзывы и Q&A" && (
+                  <motion.div key="reviews"
+                    initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
+                    
+                    <div className="mb-8">
+                      <h3 className="font-bold text-ink-900 dark:text-white mb-4">Отзывы студентов</h3>
+                      <div className="flex flex-col gap-4">
+                        <div className="bg-ink-50 dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-semibold text-ink-900 dark:text-white text-sm">Айгерим С.</span>
+                            <div className="flex items-center text-gold-500">
+                              <Star className="w-3.5 h-3.5 fill-gold-500" />
+                              <Star className="w-3.5 h-3.5 fill-gold-500" />
+                              <Star className="w-3.5 h-3.5 fill-gold-500" />
+                              <Star className="w-3.5 h-3.5 fill-gold-500" />
+                              <Star className="w-3.5 h-3.5 fill-gold-500" />
+                            </div>
+                          </div>
+                          <p className="text-sm text-ink-600 dark:text-ink-400">
+                            "Отличная программа, помогла мне устроиться в международную компанию. Преподаватели — практики с огромным опытом. Однозначно рекомендую!"
+                          </p>
+                        </div>
+                        <div className="bg-ink-50 dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-semibold text-ink-900 dark:text-white text-sm">Ильяс Н.</span>
+                            <div className="flex items-center text-gold-500">
+                              <Star className="w-3.5 h-3.5 fill-gold-500" />
+                              <Star className="w-3.5 h-3.5 fill-gold-500" />
+                              <Star className="w-3.5 h-3.5 fill-gold-500" />
+                              <Star className="w-3.5 h-3.5 fill-gold-500" />
+                              <Star className="w-3.5 h-3.5" />
+                            </div>
+                          </div>
+                          <p className="text-sm text-ink-600 dark:text-ink-400">
+                            "Обучение интенсивное, особенно на втором семестре. Было тяжело совмещать с работой. Но качество знаний на высоте."
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="font-bold text-ink-900 dark:text-white mb-4">Часто задаваемые вопросы (Q&A)</h3>
+                      <div className="flex flex-col gap-3">
+                        <div className="border border-ink-200 dark:border-ink-800 rounded-xl p-4">
+                          <div className="font-semibold text-sm mb-1 dark:text-white">Есть ли общежитие?</div>
+                          <p className="text-sm text-ink-500 dark:text-ink-400">Да, университет предоставляет места для студентов магистратуры при наличии квоты.</p>
+                        </div>
+                        <div className="border border-ink-200 dark:border-ink-800 rounded-xl p-4">
+                          <div className="font-semibold text-sm mb-1 dark:text-white">Возможно ли обучение онлайн?</div>
+                          <p className="text-sm text-ink-500 dark:text-ink-400">По правилам Болашак онлайн-обучение не допускается. Формат — очно.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                  </motion.div>
+                )}
               </AnimatePresence>
             </div>
           </motion.div>
@@ -239,12 +296,24 @@ export default function ProgramDetailPage({
                 onClick={() => inCompare ? remove(program.id) : add(program)}
                 className={`w-full flex items-center justify-center gap-2 text-sm font-semibold py-2.5 rounded-xl border transition-colors ${
                   inCompare
-                    ? "bg-brand-50 text-brand-700 border-brand-200"
-                    : "bg-ink-50 text-ink-700 border-ink-200 hover:bg-brand-50 hover:text-brand-700 hover:border-brand-200"
+                    ? "bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-400 border-brand-200 dark:border-transparent"
+                    : "bg-ink-50 dark:bg-ink-900 text-ink-700 dark:text-ink-300 border-ink-200 dark:border-ink-800 hover:bg-brand-50 dark:hover:bg-brand-500/10 hover:text-brand-700 dark:hover:text-brand-400"
                 }`}
               >
                 <BarChart2 className="w-4 h-4" />
-                {inCompare ? "В сравнении ✓" : "Добавить в сравнение"}
+                {inCompare ? "В сравнении ✓" : "Сравнить"}
+              </button>
+              
+              <button
+                onClick={() => toggleFavorite(program)}
+                className={`w-full flex items-center justify-center gap-2 text-sm font-semibold py-2.5 rounded-xl border transition-colors ${
+                  inFavorites
+                    ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-transparent"
+                    : "bg-ink-50 dark:bg-ink-900 text-ink-700 dark:text-ink-300 border-ink-200 dark:border-ink-800 hover:bg-emerald-50 hover:text-emerald-700"
+                }`}
+              >
+                <Calendar className="w-4 h-4" />
+                {inFavorites ? "В календаре ✓" : "Добавить в календарь"}
               </button>
               <button className="w-full flex items-center justify-center gap-2 bg-ink-900 text-white text-sm font-semibold py-2.5 rounded-xl opacity-50 cursor-not-allowed">
                 Подать заявку

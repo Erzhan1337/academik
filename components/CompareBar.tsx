@@ -4,10 +4,16 @@ import { motion, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
 import { BarChart2, X } from "lucide-react";
 import { useCompareStore } from "@/lib/compare-store";
+import { useState, useEffect } from "react";
 
 export function CompareBar() {
   const { items, remove } = useCompareStore();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
 
   return (
     <AnimatePresence>
@@ -19,7 +25,7 @@ export function CompareBar() {
           transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
           className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100vw-2rem)] max-w-2xl"
         >
-          <div className="bg-ink-900 text-white rounded-2xl shadow-2xl px-4 py-3 flex items-center gap-3">
+          <div className="bg-ink-900 dark:bg-ink-950 text-white rounded-2xl shadow-2xl px-4 py-3 flex items-center gap-3 border border-transparent dark:border-ink-800">
             <div className="flex items-center gap-2 flex-1 overflow-hidden">
               <BarChart2 className="w-4 h-4 text-brand-400 shrink-0" />
               <span className="text-sm font-medium text-ink-300 shrink-0">
@@ -29,7 +35,7 @@ export function CompareBar() {
                 {items.map((p) => (
                   <div
                     key={p.id}
-                    className="flex items-center gap-1.5 bg-ink-800 rounded-lg px-2 py-1 text-xs font-medium max-w-[150px]"
+                    className="flex items-center gap-1.5 bg-ink-800 dark:bg-ink-900 rounded-lg px-2 py-1 text-xs font-medium max-w-[150px]"
                   >
                     <span className="truncate">{p.title}</span>
                     <button

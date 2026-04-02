@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { BarChart2, X, Plus, Award, Star, MapPin, Clock, Globe } from "lucide-react";
@@ -199,6 +200,3 @@ export default function ComparePage() {
     </div>
   );
 }
-
-// Need to import React for useState
-import React from "react";

@@ -17,6 +17,14 @@
   --border: #e2e8f0;
 }
 
+.dark {
+  --surface: #0f172a;
+  --surface-2: #020617;
+  --ink: #f8fafc;
+  --ink-muted: #94a3b8;
+  --border: #1e293b;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;

@@ -93,13 +93,13 @@ function ProgramsContent() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Поиск по названию, университету или тегу..."
-            className="w-full bg-white border border-ink-200 rounded-xl pl-10 pr-4 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
+            className="w-full bg-white dark:bg-ink-950 border border-ink-200 dark:border-ink-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-ink-900 dark:text-white placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
           />
         </div>
         <button
           onClick={() => setFiltersOpen(!filtersOpen)}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-colors md:hidden ${
-            filtersOpen || hasFilters ? "bg-brand-600 text-white border-brand-600" : "bg-white text-ink-700 border-ink-200"
+            filtersOpen || hasFilters ? "bg-brand-600 text-white border-brand-600" : "bg-white dark:bg-ink-900 text-ink-700 dark:text-ink-300 border-ink-200 dark:border-ink-800"
           }`}
         >
           <SlidersHorizontal className="w-4 h-4" />
@@ -109,7 +109,7 @@ function ProgramsContent() {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-          className="hidden sm:block bg-white border border-ink-200 rounded-xl px-3 py-2.5 text-sm text-ink-700 focus:outline-none focus:ring-2 focus:ring-brand-500"
+          className="hidden sm:block bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl px-3 py-2.5 text-sm text-ink-700 dark:text-ink-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
         >
           <option value="rating">По рейтингу</option>
           <option value="cost-asc">Дешевле сначала</option>
@@ -238,7 +238,7 @@ function FilterPanel({
           className={`w-10 h-5.5 rounded-full relative transition-colors ${bolashak ? "bg-amber-500" : "bg-ink-200"}`}
           style={{ height: "22px" }}
         >
-          <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${bolashak ? "translate-x-5" : "translate-x-0.5"}`} />
+          <div className={`absolute top-0.5 w-4 h-4 bg-white dark:bg-ink-950 rounded-full shadow transition-transform ${bolashak ? "translate-x-5" : "translate-x-0.5"}`} />
         </div>
       </label>
 

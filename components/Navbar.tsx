@@ -5,12 +5,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, GraduationCap, ChevronRight } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 const NAV_LINKS = [
   { href: "/programs", label: "Программы" },
   { href: "/bolashak", label: "Болашак" },
   { href: "/compare", label: "Сравнение" },
   { href: "/checklist", label: "Чек-лист" },
+  { href: "/calendar", label: "Календарь" },
+  { href: "/templates", label: "Шаблоны" },
+  { href: "/calculator", label: "Калькулятор" },
 ];
 
 export function Navbar() {
@@ -34,7 +38,7 @@ export function Navbar() {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-white/95 backdrop-blur-md shadow-[0_1px_0_0_#e2e8f0]"
+            ? "bg-white/95 dark:bg-ink-950/95 backdrop-blur-md shadow-[0_1px_0_0_#e2e8f0] dark:shadow-[0_1px_0_0_#1e293b]"
             : "bg-transparent"
         }`}
       >
@@ -46,7 +50,7 @@ export function Navbar() {
                 <GraduationCap className="w-4 h-4 text-white" />
               </div>
               <span
-                className="font-display text-xl text-ink-900 tracking-tight"
+                className="font-display text-xl text-ink-900 dark:text-white tracking-tight"
                 style={{ fontFamily: "var(--font-display)" }}
               >
                 Academik<span className="text-brand-600">.kz</span>
@@ -63,14 +67,14 @@ export function Navbar() {
                     href={link.href}
                     className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       active
-                        ? "text-brand-600 bg-brand-50"
-                        : "text-ink-600 hover:text-ink-900 hover:bg-ink-100"
+                        ? "text-brand-600 bg-brand-50 dark:bg-brand-500/10 dark:text-brand-400"
+                        : "text-ink-600 dark:text-ink-400 hover:text-ink-900 dark:hover:text-white hover:bg-ink-100 dark:hover:bg-ink-800"
                     }`}
                   >
                     {active && (
                       <motion.span
                         layoutId="nav-pill"
-                        className="absolute inset-0 bg-brand-50 rounded-lg"
+                        className="absolute inset-0 bg-brand-50 dark:bg-brand-500/10 rounded-lg"
                         transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
                       />
                     )}
@@ -80,9 +84,11 @@ export function Navbar() {
               })}
             </nav>
 
-            {/* Auth buttons */}
-            <div className="hidden md:flex items-center gap-3">
-              <button className="text-sm font-medium text-ink-600 hover:text-ink-900 px-3 py-2 rounded-lg transition-colors">
+            {/* Auth + Theme */}
+            <div className="hidden md:flex items-center gap-2">
+              <ThemeToggle />
+              <div className="w-px h-5 bg-ink-200 dark:bg-ink-800 mx-1" />
+              <button className="text-sm font-medium text-ink-600 dark:text-ink-300 hover:text-ink-900 dark:hover:text-white px-3 py-2 rounded-lg transition-colors">
                 Войти
               </button>
               <button className="text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-lg transition-colors shadow-sm">
@@ -91,12 +97,15 @@ export function Navbar() {
             </div>
 
             {/* Mobile hamburger */}
-            <button
-              onClick={() => setOpen(!open)}
-              className="md:hidden p-2 rounded-lg text-ink-600 hover:bg-ink-100 transition-colors"
-            >
-              {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+            <div className="md:hidden flex items-center gap-2">
+              <ThemeToggle />
+              <button
+                onClick={() => setOpen(!open)}
+                className="p-2 rounded-lg text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800 transition-colors"
+              >
+                {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
         </div>
       </motion.header>
@@ -109,7 +118,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-16 left-0 right-0 z-40 bg-white border-b border-ink-200 shadow-xl md:hidden"
+            className="fixed top-16 left-0 right-0 z-40 bg-white dark:bg-ink-950 border-b border-ink-200 dark:border-ink-800 shadow-xl md:hidden"
           >
             <nav className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
               {NAV_LINKS.map((link, i) => (
@@ -123,8 +132,8 @@ export function Navbar() {
                     href={link.href}
                     className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                       pathname.startsWith(link.href)
-                        ? "text-brand-600 bg-brand-50"
-                        : "text-ink-700 hover:bg-ink-50"
+                        ? "text-brand-600 bg-brand-50 dark:bg-brand-500/10 dark:text-brand-400"
+                        : "text-ink-700 dark:text-ink-300 hover:bg-ink-50 dark:hover:bg-ink-800/50"
                     }`}
                   >
                     {link.label}
@@ -132,8 +141,8 @@ export function Navbar() {
                   </Link>
                 </motion.div>
               ))}
-              <div className="mt-3 pt-3 border-t border-ink-100 flex gap-2">
-                <button className="flex-1 py-2.5 text-sm font-medium text-ink-700 border border-ink-200 rounded-lg">
+              <div className="mt-3 pt-3 border-t border-ink-100 dark:border-ink-800 flex gap-2">
+                <button className="flex-1 py-2.5 text-sm font-medium text-ink-700 dark:text-ink-300 border border-ink-200 dark:border-ink-700 rounded-lg">
                   Войти
                 </button>
                 <button className="flex-1 py-2.5 text-sm font-semibold text-white bg-brand-600 rounded-lg">
