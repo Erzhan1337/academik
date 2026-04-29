@@ -216,21 +216,21 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-ink-950 dark:bg-[#070a12] dark:text-white">
-      <div className="mx-auto max-w-7xl px-4 pb-20 pt-28 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-3 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8">
         <section className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="relative overflow-hidden rounded-[2.25rem] border border-ink-200 bg-white p-6 shadow-sm dark:border-ink-800 dark:bg-ink-950 sm:p-8">
-            <div className="relative flex flex-col gap-8">
+          <div className="relative overflow-hidden rounded-[1.5rem] border border-ink-200 bg-white p-4 shadow-sm dark:border-ink-800 dark:bg-ink-950 sm:rounded-[2rem] sm:p-6 lg:rounded-[2.25rem] lg:p-8">
+            <div className="relative flex flex-col gap-6 sm:gap-8">
               <div className="flex items-start justify-between gap-4">
-                <div className="flex items-center gap-5">
-                  <div className="grid h-20 w-20 shrink-0 place-items-center rounded-[1.6rem] bg-ink-950 text-2xl font-black text-white shadow-2xl shadow-ink-950/20 dark:bg-white dark:text-ink-950">
+                <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+                  <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-ink-950 text-xl font-black text-white shadow-lg shadow-ink-950/15 dark:bg-white dark:text-ink-950 sm:h-20 sm:w-20 sm:rounded-[1.6rem] sm:text-2xl">
                     {user.avatar}
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-300">
                       <ShieldCheck className="h-3.5 w-3.5" />
                       Рабочий кабинет
                     </div>
-                    <h1 className="text-4xl font-bold tracking-tight text-ink-950 dark:text-white sm:text-5xl" style={{ fontFamily: "var(--font-display)" }}>
+                    <h1 className="text-3xl font-bold tracking-tight text-ink-950 dark:text-white sm:text-4xl lg:text-5xl" style={{ fontFamily: "var(--font-display)" }}>
                       {getFirstName(user.name)}, держим фокус.
                     </h1>
                     <p className="mt-3 max-w-2xl text-sm leading-6 text-ink-600 dark:text-ink-300">
@@ -251,7 +251,7 @@ export default function ProfilePage() {
               <div className="grid gap-3 sm:grid-cols-2">
                 <Link
                   href={nextAction.href}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-ink-950 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-ink-800 dark:bg-white dark:text-ink-950 dark:hover:bg-ink-200"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-ink-950 px-4 py-3 text-center text-sm font-bold text-white transition-colors hover:bg-ink-800 dark:bg-white dark:text-ink-950 dark:hover:bg-ink-200 sm:px-5"
                 >
                   Продолжить подготовку
                   <ArrowRight className="h-4 w-4" />
@@ -259,7 +259,7 @@ export default function ProfilePage() {
                 <button
                   type="button"
                   onClick={() => setEditOpen((value) => !value)}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-ink-200 bg-white px-5 py-3 text-sm font-bold text-ink-800 transition-colors hover:border-brand-200 hover:bg-brand-50 dark:border-ink-800 dark:bg-ink-900 dark:text-ink-100 dark:hover:bg-ink-800"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-ink-200 bg-white px-4 py-3 text-center text-sm font-bold text-ink-800 transition-colors hover:border-brand-200 hover:bg-brand-50 dark:border-ink-800 dark:bg-ink-900 dark:text-ink-100 dark:hover:bg-ink-800 sm:px-5"
                 >
                   <Pencil className="h-4 w-4" />
                   {editOpen ? "Скрыть настройки" : "Редактировать профиль"}
@@ -271,7 +271,7 @@ export default function ProfilePage() {
           <NextActionCard action={nextAction} />
         </section>
 
-        <section className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <section className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
           <StatCard icon={FileCheck} label="Документы" value={`${checklistStats.progress}%`} helper={`${checklistStats.remaining} осталось`} href="/checklist" />
           <StatCard
             icon={CalendarDays}
@@ -284,8 +284,8 @@ export default function ProfilePage() {
           <StatCard icon={BarChart2} label="Сравнение" value={`${items.length}/3`} helper="можно добавить ещё" href="/compare" />
         </section>
 
-        <section className="mt-8 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="flex flex-col gap-8">
+        <section className="mt-6 grid gap-6 lg:mt-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-8">
+          <div className="flex flex-col gap-6 lg:gap-8">
             <Panel title="Документы к подаче" description="Показываем только то, что важно сейчас. Полный список остаётся в чек-листе." actionHref="/checklist" actionLabel="Открыть чек-лист">
               <div className="rounded-[1.5rem] border border-ink-200 bg-white/70 p-5 dark:border-ink-800 dark:bg-ink-950/50">
                 <div className="mb-3 flex items-center justify-between">
@@ -298,7 +298,7 @@ export default function ProfilePage() {
                     style={{ width: `${checklistStats.progress}%` }}
                   />
                 </div>
-                <div className="mt-4 grid grid-cols-3 gap-3 text-center">
+                <div className="mt-4 grid grid-cols-3 gap-2 text-center sm:gap-3">
                   <MiniMetric label="Готово" value={checklistStats.totalChecked} />
                   <MiniMetric label="Осталось" value={checklistStats.remaining} />
                   <MiniMetric label="Обяз." value={`${checklistStats.requiredProgress}%`} />
@@ -343,7 +343,7 @@ export default function ProfilePage() {
             </Panel>
           </div>
 
-          <aside className="flex flex-col gap-8">
+          <aside className="flex flex-col gap-6 lg:gap-8">
             <Panel title="Профиль поступающего" description="Короткая карточка, по которой строится подборка." actionHref="/profile" actionLabel="Профиль">
               <div className="grid gap-3">
                 <SummaryRow label="Степень" value={profile.targetDegree} />
@@ -367,7 +367,7 @@ export default function ProfilePage() {
         {editOpen && (
           <section
             ref={editSectionRef}
-            className="mt-8 rounded-[2rem] border border-ink-200 bg-white p-6 shadow-sm dark:border-ink-800 dark:bg-ink-900 sm:p-8"
+            className="mt-6 rounded-[1.5rem] border border-ink-200 bg-white p-4 shadow-sm dark:border-ink-800 dark:bg-ink-900 sm:mt-8 sm:rounded-[2rem] sm:p-6 lg:p-8"
           >
             <div className="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
               <div>
@@ -385,7 +385,7 @@ export default function ProfilePage() {
               </button>
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-3">
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               <Field label="Имя" icon={User}>
                 <input value={user.name} onChange={(e) => updateUser({ name: e.target.value })} className="profile-input" />
               </Field>
@@ -395,7 +395,7 @@ export default function ProfilePage() {
               <Field label="Год поступления" icon={CalendarDays}>
                 <input value={profile.admissionYear} onChange={(e) => handleProfileChange("admissionYear", e.target.value)} className="profile-input" />
               </Field>
-              <Field label="Цель" icon={Target} className="lg:col-span-3">
+              <Field label="Цель" icon={Target} className="sm:col-span-2 lg:col-span-3">
                 <input value={profile.goal} onChange={(e) => handleProfileChange("goal", e.target.value)} className="profile-input" />
               </Field>
               <Field label="Степень" icon={BookOpen}>
@@ -429,7 +429,7 @@ export default function ProfilePage() {
                 <input value={profile.experience} onChange={(e) => handleProfileChange("experience", e.target.value)} className="profile-input" />
               </Field>
 
-              <div className="grid gap-3 lg:col-span-3 sm:grid-cols-2">
+              <div className="grid gap-3 sm:col-span-2 sm:grid-cols-2 lg:col-span-3">
                 <ToggleRow
                   icon={Bell}
                   label="Уведомления о дедлайнах"
@@ -445,7 +445,7 @@ export default function ProfilePage() {
                 />
               </div>
 
-              <Field label="Заметки" icon={Pencil} className="lg:col-span-3">
+              <Field label="Заметки" icon={Pencil} className="sm:col-span-2 lg:col-span-3">
                 <textarea
                   value={profile.notes}
                   onChange={(e) => handleProfileChange("notes", e.target.value)}
@@ -457,7 +457,7 @@ export default function ProfilePage() {
           </section>
         )}
 
-        <section className="mt-8 rounded-[2rem] border border-red-200/70 bg-white p-6 shadow-sm dark:border-red-500/20 dark:bg-ink-950">
+        <section className="mt-6 rounded-[1.5rem] border border-red-200/70 bg-white p-4 shadow-sm dark:border-red-500/20 dark:bg-ink-950 sm:mt-8 sm:rounded-[2rem] sm:p-6">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
               <h2 className="text-lg font-bold text-ink-950 dark:text-white">Сессия</h2>
@@ -467,7 +467,7 @@ export default function ProfilePage() {
             </div>
             <button
               onClick={handleLogout}
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+              className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 sm:w-auto"
             >
               <LogOut className="h-4 w-4" />
               Выйти
@@ -526,23 +526,23 @@ function NextActionCard({
   }[action.tone];
 
   return (
-    <div className={`relative overflow-hidden rounded-[2.25rem] bg-gradient-to-br ${toneClass} p-6 text-white shadow-sm sm:p-8`}>
-      <div className="relative flex h-full flex-col justify-between gap-10">
+    <div className={`relative overflow-hidden rounded-[1.5rem] bg-gradient-to-br ${toneClass} p-5 text-white shadow-sm sm:rounded-[2rem] sm:p-6 lg:rounded-[2.25rem] lg:p-8`}>
+      <div className="relative flex h-full flex-col justify-between gap-8 sm:gap-10">
         <div>
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white/90">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white/90 sm:mb-5">
             <Sparkles className="h-3.5 w-3.5" />
             Следующий шаг
           </div>
-          <div className="mb-5 grid h-14 w-14 place-items-center rounded-2xl bg-white/15">
-            <Icon className="h-7 w-7" />
+          <div className="mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-white/15 sm:mb-5 sm:h-14 sm:w-14">
+            <Icon className="h-6 w-6 sm:h-7 sm:w-7" />
           </div>
-          <h2 className="text-3xl font-bold leading-tight" style={{ fontFamily: "var(--font-display)" }}>
+          <h2 className="text-2xl font-bold leading-tight sm:text-3xl" style={{ fontFamily: "var(--font-display)" }}>
             {action.title}
           </h2>
           <p className="mt-3 text-sm leading-6 text-white/85">{action.description}</p>
         </div>
 
-        <Link href={action.href} className="inline-flex w-fit items-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-black text-ink-950 transition-colors hover:bg-ink-50">
+        <Link href={action.href} className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-black text-ink-950 transition-colors hover:bg-ink-50 sm:w-fit">
           {action.label}
           <ArrowRight className="h-4 w-4" />
         </Link>
@@ -566,11 +566,11 @@ function StatCard({
 }) {
   return (
     <Link href={href}>
-      <div className="h-full rounded-3xl border border-ink-200 bg-white p-5 shadow-sm transition-colors hover:border-brand-200 hover:bg-brand-50 dark:border-ink-800 dark:bg-ink-950 dark:hover:border-brand-500/30 dark:hover:bg-brand-500/10">
-        <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-ink-950 text-white dark:bg-white dark:text-ink-950">
+      <div className="h-full rounded-2xl border border-ink-200 bg-white p-4 shadow-sm transition-colors hover:border-brand-200 hover:bg-brand-50 dark:border-ink-800 dark:bg-ink-950 dark:hover:border-brand-500/30 dark:hover:bg-brand-500/10 sm:rounded-3xl sm:p-5">
+        <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-ink-950 text-white dark:bg-white dark:text-ink-950 sm:mb-4 sm:h-11 sm:w-11">
           <Icon className="h-5 w-5" />
         </div>
-        <div className="text-3xl font-black text-ink-950 dark:text-white" style={{ fontFamily: "var(--font-display)" }}>
+        <div className="text-2xl font-black text-ink-950 dark:text-white sm:text-3xl" style={{ fontFamily: "var(--font-display)" }}>
           {value}
         </div>
         <div className="mt-1 text-sm font-semibold text-ink-600 dark:text-ink-300">{label}</div>
@@ -594,10 +594,10 @@ function Panel({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-[2rem] border border-ink-200 bg-white p-6 shadow-sm dark:border-ink-800 dark:bg-ink-950">
+    <section className="rounded-[1.5rem] border border-ink-200 bg-white p-4 shadow-sm dark:border-ink-800 dark:bg-ink-950 sm:rounded-[2rem] sm:p-6">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-ink-950 dark:text-white" style={{ fontFamily: "var(--font-display)" }}>
+          <h2 className="text-xl font-bold text-ink-950 dark:text-white sm:text-2xl" style={{ fontFamily: "var(--font-display)" }}>
             {title}
           </h2>
           <p className="mt-1 text-sm leading-6 text-ink-500 dark:text-ink-400">{description}</p>
@@ -639,7 +639,7 @@ function ProgramGroup({ title, empty, children }: { title: string; empty: string
 
 function ProgramRow({ program }: { program: (typeof PROGRAMS)[number] }) {
   return (
-    <Link href={`/programs/${program.id}`}>
+    <Link href={`/programs/${program.id}`} className="block">
       <div className="rounded-2xl border border-ink-200 bg-ink-50 p-4 transition-colors hover:border-brand-200 hover:bg-brand-50 dark:border-ink-800 dark:bg-ink-950/50 dark:hover:border-brand-500/30 dark:hover:bg-brand-500/10">
         <div className="mb-2 flex flex-wrap items-center gap-2">
           {program.bolashak && (
@@ -654,7 +654,7 @@ function ProgramRow({ program }: { program: (typeof PROGRAMS)[number] }) {
         </div>
         <h3 className="line-clamp-2 text-sm font-bold text-ink-950 dark:text-white">{program.title}</h3>
         <p className="mt-1 line-clamp-1 text-xs text-ink-500 dark:text-ink-400">{program.university}</p>
-        <div className="mt-3 flex items-center justify-between gap-3 text-xs">
+        <div className="mt-3 flex flex-col gap-1 text-xs min-[380px]:flex-row min-[380px]:items-center min-[380px]:justify-between min-[380px]:gap-3">
           <span className="font-semibold text-brand-600 dark:text-brand-400">{program.deadlineLabel}</span>
           <span className="shrink-0 text-ink-400 dark:text-ink-500">{program.city}</span>
         </div>
@@ -665,9 +665,9 @@ function ProgramRow({ program }: { program: (typeof PROGRAMS)[number] }) {
 
 function SummaryRow({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-2xl border border-ink-200 bg-ink-50 px-4 py-3 dark:border-ink-800 dark:bg-ink-950/50">
+    <div className="flex flex-col items-start justify-between gap-1 rounded-2xl border border-ink-200 bg-ink-50 px-4 py-3 dark:border-ink-800 dark:bg-ink-950/50 min-[420px]:flex-row min-[420px]:items-center min-[420px]:gap-4">
       <span className="text-sm text-ink-500 dark:text-ink-400">{label}</span>
-      <span className="text-right text-sm font-bold text-ink-900 dark:text-white">{value}</span>
+      <span className="text-left text-sm font-bold text-ink-900 dark:text-white min-[420px]:text-right">{value}</span>
     </div>
   );
 }
@@ -710,9 +710,9 @@ function ToggleRow({
   const active = tone === "amber" ? "bg-amber-500" : "bg-brand-600";
 
   return (
-    <div className="flex items-center justify-between gap-4 rounded-2xl border border-ink-200 bg-ink-50 px-4 py-3 dark:border-ink-800 dark:bg-ink-950/50">
-      <span className="flex items-center gap-2 text-sm font-semibold text-ink-700 dark:text-ink-200">
-        <Icon className="h-4 w-4 text-brand-500" />
+    <div className="flex items-center justify-between gap-3 rounded-2xl border border-ink-200 bg-ink-50 px-4 py-3 dark:border-ink-800 dark:bg-ink-950/50">
+      <span className="flex min-w-0 items-center gap-2 text-sm font-semibold text-ink-700 dark:text-ink-200">
+        <Icon className="h-4 w-4 shrink-0 text-brand-500" />
         {label}
       </span>
       <button
@@ -721,7 +721,7 @@ function ToggleRow({
         aria-checked={enabled}
         aria-label={label}
         onClick={onClick}
-        className={`relative h-6 w-11 rounded-full transition-colors ${enabled ? active : "bg-ink-300 dark:bg-ink-800"}`}
+        className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${enabled ? active : "bg-ink-300 dark:bg-ink-800"}`}
       >
         <span className={`absolute left-1 top-1 h-4 w-4 rounded-full bg-white shadow transition-transform ${enabled ? "translate-x-5" : "translate-x-0"}`} />
       </button>
@@ -731,8 +731,8 @@ function ToggleRow({
 
 function MiniMetric({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="rounded-xl bg-white p-3 dark:bg-ink-900">
-      <div className="text-lg font-black text-ink-950 dark:text-white">{value}</div>
+    <div className="rounded-xl bg-white p-2.5 dark:bg-ink-900 sm:p-3">
+      <div className="text-base font-black text-ink-950 dark:text-white sm:text-lg">{value}</div>
       <div className="text-[11px] font-medium text-ink-500 dark:text-ink-400">{label}</div>
     </div>
   );
