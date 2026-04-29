@@ -109,11 +109,10 @@ export default function HomePage() {
             className="text-4xl sm:text-5xl lg:text-6xl font-bold text-ink-950 dark:text-white leading-tight mb-6"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            Найдите свою{" "}
+            Большая карьера начинается{" "}
             <span className="relative inline-block">
-              <span className="text-brand-600 dark:text-gold-400">магистратуру</span>
+              <span className="text-brand-600 dark:text-gold-400">с правильного выбора</span>
             </span>
-            <br />в Казахстане
           </motion.h1>
 
           <motion.p
