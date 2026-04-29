@@ -22,8 +22,15 @@ export function ProgramCard({ program, index = 0 }: { program: Program; index?: 
   const toggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (isInCompare) remove(program.id);
-    else if (items.length < 3) add(program);
+    if (isInCompare) {
+      remove(program.id);
+    } else {
+      if (items.length >= 3) {
+        alert("Вы можете сравнить максимум 3 программы одновременно.");
+        return;
+      }
+      add(program);
+    }
   };
 
   return (

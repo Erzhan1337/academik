@@ -8,8 +8,8 @@ import { useCompareStore } from "@/lib/compare-store";
 
 const ROWS = [
   { label: "Университет", key: "university" },
-  { label: "Город", key: "city", icon: MapPin },
-  { label: "Длительность", key: "duration", icon: Clock },
+  { label: "Город", key: "city" },
+  { label: "Длительность", key: "duration" },
   { label: "Язык", key: "language" },
   { label: "Стоимость", key: "costLabel" },
   { label: "Срок подачи", key: "deadlineLabel" },
@@ -101,47 +101,46 @@ export default function ComparePage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-ink-900 rounded-2xl border border-ink-200 dark:border-ink-800 overflow-hidden"
+          className="bg-white dark:bg-ink-900 rounded-2xl border border-ink-200 dark:border-ink-800 shadow-sm relative z-0 flex flex-col"
         >
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full border-collapse">
               <thead>
-                <tr className="border-b border-ink-100 dark:border-ink-800">
-                  <th className="text-left px-5 py-4 text-xs font-semibold text-ink-400 dark:text-ink-500 uppercase tracking-wider w-36">
-                    Параметр
+                <tr>
+                  <th className="sticky left-0 top-0 z-20 bg-ink-50 dark:bg-ink-900/95 backdrop-blur-md px-5 py-4 text-left text-xs font-bold text-ink-500 dark:text-ink-400 uppercase tracking-wider w-40 border-b border-r border-ink-200 dark:border-ink-800">
+                    Критерии
                   </th>
                   {items.map((program, i) => (
-                    <th key={program.id} className="px-5 py-4 min-w-[200px]">
-                      <div className="text-left">
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            {program.bolashak && (
-                              <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400 text-xs font-medium mb-1">
-                                <Award className="w-3 h-3" /> Болашак
-                              </div>
-                            )}
-                            <Link href={`/programs/${program.id}`}>
-                              <span className="font-semibold text-ink-900 dark:text-white text-sm hover:text-brand-600 dark:hover:text-brand-400 transition-colors block leading-snug">
-                                {program.title}
-                              </span>
-                            </Link>
+                    <th key={program.id} className="sticky top-0 z-10 bg-white dark:bg-ink-900 px-5 py-4 min-w-[240px] border-b border-r border-ink-100 dark:border-ink-800 align-top last:border-r-0 shadow-[0_1px_0_0_rgba(0,0,0,0.05)] dark:shadow-[0_1px_0_0_rgba(255,255,255,0.05)]">
+                      <div className="text-left relative">
+                        <button
+                          onClick={() => remove(program.id)}
+                          className="absolute -top-1 -right-1 text-ink-300 dark:text-ink-600 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-full p-1 transition-colors"
+                          title="Убрать из сравнения"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                        {program.bolashak && (
+                          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-bold uppercase tracking-wider mb-2 border border-amber-200/50 dark:border-amber-500/20">
+                            <Award className="w-3 h-3" /> Болашак
                           </div>
-                          <button
-                            onClick={() => remove(program.id)}
-                            className="text-ink-300 dark:text-ink-600 hover:text-red-500 dark:hover:text-red-400 transition-colors shrink-0 mt-0.5"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
+                        )}
+                        <Link href={`/programs/${program.id}`} className="block pr-6">
+                          <span className="font-bold text-ink-900 dark:text-white text-base hover:text-brand-600 dark:hover:text-brand-400 transition-colors leading-tight">
+                            {program.title}
+                          </span>
+                        </Link>
                       </div>
                     </th>
                   ))}
                   {items.length < 3 && (
-                    <th className="px-5 py-4 min-w-[160px]">
+                    <th className="sticky top-0 z-10 bg-ink-50/50 dark:bg-ink-900/50 px-5 py-4 min-w-[200px] border-b border-ink-100 dark:border-ink-800 align-top">
                       <Link href="/programs">
-                        <div className="flex flex-col items-center justify-center border-2 border-dashed border-ink-200 dark:border-ink-700 rounded-xl py-5 text-ink-400 dark:text-ink-500 hover:border-brand-400 hover:text-brand-500 dark:hover:text-brand-400 transition-colors cursor-pointer">
-                          <Plus className="w-5 h-5 mb-1" />
-                          <span className="text-xs font-medium">Добавить</span>
+                        <div className="flex flex-col items-center justify-center border-2 border-dashed border-ink-300 dark:border-ink-700 rounded-xl py-6 text-ink-400 dark:text-ink-500 hover:border-brand-400 hover:text-brand-500 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-colors cursor-pointer group">
+                          <div className="w-10 h-10 rounded-full bg-ink-100 dark:bg-ink-800 flex items-center justify-center mb-2 group-hover:bg-brand-100 dark:group-hover:bg-brand-500/20 transition-colors">
+                            <Plus className="w-5 h-5" />
+                          </div>
+                          <span className="text-sm font-semibold">Добавить программу</span>
                         </div>
                       </Link>
                     </th>
@@ -152,6 +151,7 @@ export default function ComparePage() {
                 <AnimatePresence>
                   {visibleRows.map((row, ri) => {
                     const diff = isDifferent(row.key);
+                    const Icon = row.icon;
                     return (
                       <motion.tr
                         key={row.key}
@@ -159,30 +159,32 @@ export default function ComparePage() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ delay: ri * 0.03 }}
-                        className={`border-b border-ink-50 dark:border-ink-800/70 ${diff ? "bg-brand-50/60 dark:bg-brand-500/10" : ""}`}
+                        className={`border-b border-ink-100 dark:border-ink-800/80 group transition-colors ${diff ? "bg-brand-50/30 dark:bg-brand-900/10" : "hover:bg-ink-50/50 dark:hover:bg-ink-800/20"}`}
                       >
-                        <td className="px-5 py-3.5 text-xs font-semibold text-ink-500 dark:text-ink-400 uppercase tracking-wider">
-                          {row.label}
-                          {diff && (
-                            <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-brand-500" />
-                          )}
+                        <td className={`sticky left-0 z-10 px-5 py-4 text-sm font-semibold border-r border-ink-200 dark:border-ink-800 transition-colors ${diff ? "bg-brand-50/50 dark:bg-brand-900/20 text-brand-900 dark:text-brand-200 backdrop-blur-md" : "bg-white/95 dark:bg-ink-900/95 backdrop-blur-md text-ink-600 dark:text-ink-300 group-hover:bg-ink-50 dark:group-hover:bg-ink-800/50"}`}>
+                          <div className="flex items-center justify-between gap-2">
+                            <span>{row.label}</span>
+                            {diff && (
+                              <span className="inline-block w-1.5 h-1.5 shrink-0 rounded-full bg-brand-500 ring-2 ring-white dark:ring-ink-900" title="Есть отличия" />
+                            )}
+                          </div>
                         </td>
                         {items.map((program) => {
                           const val = getValue(program, row.key);
                           const isBolashak = row.key === "bolashak";
                           return (
-                            <td key={program.id} className="px-5 py-3.5 text-sm">
+                            <td key={program.id} className="px-5 py-4 text-sm border-r border-ink-100 dark:border-ink-800 last:border-r-0">
                               <span className={
                                 isBolashak
-                                  ? val.startsWith("✓") ? "text-amber-600 dark:text-amber-400 font-semibold" : "text-ink-400 dark:text-ink-500"
-                                  : "text-ink-800 dark:text-ink-200"
+                                  ? val.startsWith("✓") ? "inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 rounded-md" : "text-ink-400 dark:text-ink-500"
+                                  : diff ? "text-ink-950 dark:text-white font-medium" : "text-ink-700 dark:text-ink-300"
                               }>
                                 {val}
                               </span>
                             </td>
                           );
                         })}
-                        {items.length < 3 && <td />}
+                        {items.length < 3 && <td className="bg-ink-50/30 dark:bg-ink-900/30 border-t border-ink-100 dark:border-ink-800" />}
                       </motion.tr>
                     );
                   })}
@@ -191,9 +193,13 @@ export default function ComparePage() {
             </table>
           </div>
 
-          {/* Footer row — select */}
-          <div className="border-t border-ink-100 dark:border-ink-800 px-5 py-3 flex items-center gap-2">
-            <span className="text-xs text-ink-400 dark:text-ink-500">Синие точки показывают параметры, которые отличаются</span>
+          {/* Footer hint */}
+          <div className="bg-ink-50 dark:bg-ink-900/50 border-t border-ink-200 dark:border-ink-800 px-5 py-3 flex items-center justify-between text-xs text-ink-500 dark:text-ink-400 mt-auto">
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-500" />
+              Синий индикатор отмечает параметры с отличиями
+            </div>
+            <div className="hidden sm:block">Используйте горизонтальную прокрутку для просмотра всех программ</div>
           </div>
         </motion.div>
       )}
