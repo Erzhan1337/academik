@@ -5,9 +5,22 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AppShell } from "@/components/AppShell";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://academik.kz"),
   title: "Academik.kz — магистратура в Казахстане",
   description:
     "Подбор программ магистратуры, гид по Болашак и чек-лист документов для поступления в университеты Казахстана.",
+  icons: {
+    icon: "/logo-mark.svg",
+    shortcut: "/logo-mark.svg",
+    apple: "/logo-mark.svg",
+  },
+  openGraph: {
+    images: ["/logo.svg"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/logo.svg"],
+  },
 };
 
 export default function RootLayout({
@@ -35,4 +48,3 @@ export default function RootLayout({
     </html>
   );
 }
-

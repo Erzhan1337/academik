@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
-import { GraduationCap, Mail, Lock, User, ArrowRight, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Mail, Lock, User, ArrowRight, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { useAuthStore } from "@/lib/auth-store";
 
 export default function AuthPage() {
@@ -64,15 +65,14 @@ export default function AuthPage() {
           className="text-center mb-8"
         >
           <Link href="/" className="inline-flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-brand-600/25">
-              <GraduationCap className="w-5 h-5 text-white" />
-            </div>
-            <span
-              className="font-display text-2xl text-ink-900 dark:text-white tracking-tight"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              Academik<span className="text-brand-600">.kz</span>
-            </span>
+            <Image
+              src="/logo.svg"
+              alt="Academik"
+              width={234}
+              height={56}
+              priority
+              className="h-14 w-auto object-contain transition-transform group-hover:scale-105"
+            />
           </Link>
         </motion.div>
 

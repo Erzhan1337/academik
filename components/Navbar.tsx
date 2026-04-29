@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, GraduationCap, ChevronRight, User, LogOut } from "lucide-react";
+import { Menu, X, ChevronRight, User, LogOut } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { useAuthStore } from "@/lib/auth-store";
 
@@ -49,15 +50,14 @@ export function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <GraduationCap className="w-4 h-4 text-white" />
-              </div>
-              <span
-                className="font-display text-xl text-ink-900 dark:text-white tracking-tight"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
-                Academik<span className="text-brand-600">.kz</span>
-              </span>
+              <Image
+                src="/logo.svg"
+                alt="Academik"
+                width={167}
+                height={40}
+                priority
+                className="h-10 w-auto object-contain transition-transform group-hover:scale-105"
+              />
             </Link>
 
             {/* Desktop nav */}

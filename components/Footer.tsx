@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { GraduationCap, Mail, MapPin } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 
 const LINKS = {
   platform: [
@@ -24,15 +25,13 @@ export function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center">
-                <GraduationCap className="w-4 h-4 text-white" />
-              </div>
-              <span
-                className="text-xl font-bold tracking-tight"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
-                Academik<span className="text-brand-400">.kz</span>
-              </span>
+              <Image
+                src="/logo.svg"
+                alt="Academik"
+                width={201}
+                height={48}
+                className="h-12 w-auto object-contain"
+              />
             </div>
             <p className="text-ink-400 text-sm leading-relaxed mb-6">
               Платформа для выбора магистратуры и подготовки к поступлению в Казахстане.

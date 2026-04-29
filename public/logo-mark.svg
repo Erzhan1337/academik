@@ -1,0 +1,33 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="academik-mark-title academik-mark-desc">
+  <title id="academik-mark-title">Academik mark</title>
+  <desc id="academik-mark-desc">Abstract academic symbol inside orbital paths.</desc>
+  <defs>
+    <linearGradient id="academik-blue" x1="34" y1="38" x2="164" y2="178" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8294B5"/>
+      <stop offset="1" stop-color="#536A90"/>
+    </linearGradient>
+    <linearGradient id="academik-gold" x1="92" y1="28" x2="154" y2="184" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E2AC48"/>
+      <stop offset="1" stop-color="#C8842E"/>
+    </linearGradient>
+    <linearGradient id="academik-ring" x1="34" y1="40" x2="180" y2="182" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8294B5"/>
+      <stop offset="0.54" stop-color="#536A90"/>
+      <stop offset="0.55" stop-color="#E2AC48"/>
+      <stop offset="1" stop-color="#C8842E"/>
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(4 18)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M154 38C178 50 194 73 198 100" stroke="url(#academik-blue)" stroke-width="12"/>
+    <path d="M38 102C42 73 61 49 86 38" stroke="url(#academik-blue)" stroke-width="12"/>
+    <path d="M39 121C47 161 82 191 124 191C164 191 199 162 207 123" stroke="url(#academik-ring)" stroke-width="12"/>
+    <path d="M47 167C80 136 112 122 148 124C177 126 199 140 216 165" stroke="url(#academik-blue)" stroke-width="11"/>
+    <path d="M48 137C78 134 102 128 122 113" stroke="url(#academik-blue)" stroke-width="11"/>
+
+    <circle cx="124" cy="47" r="14" stroke="url(#academik-gold)" stroke-width="10"/>
+    <path d="M123 79C109 91 100 114 95 149C91 176 79 194 61 207" stroke="url(#academik-gold)" stroke-width="13"/>
+    <path d="M125 79C146 96 159 123 166 159C171 184 184 199 204 207" stroke="url(#academik-gold)" stroke-width="13"/>
+    <path d="M102 104C109 87 116 75 124 69C135 79 146 99 153 117" stroke="url(#academik-gold)" stroke-width="12"/>
+  </g>
+</svg>
