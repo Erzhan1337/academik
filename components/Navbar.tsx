@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, GraduationCap, ChevronRight, User } from "lucide-react";
+import { Menu, X, GraduationCap, ChevronRight, User, LogOut } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { useAuthStore } from "@/lib/auth-store";
 
 const NAV_LINKS = [
   { href: "/programs", label: "Программы" },
@@ -21,6 +22,8 @@ export function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const { user, logout } = useAuthStore();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -88,13 +91,56 @@ export function Navbar() {
             <div className="hidden md:flex items-center gap-2">
               <ThemeToggle />
               <div className="w-px h-5 bg-ink-200 dark:bg-ink-800 mx-1" />
-              <Link
-                href="/auth"
-                className="flex items-center gap-2 text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-lg transition-colors shadow-sm"
-              >
-                <User className="w-4 h-4" />
-                Войти
-              </Link>
+              {user ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setProfileOpen(!profileOpen)}
+                    className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl hover:bg-ink-100 dark:hover:bg-ink-800 transition-colors"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-white text-xs font-bold">
+                      {user.avatar}
+                    </div>
+                    <span className="text-sm font-medium text-ink-700 dark:text-ink-200 max-w-[120px] truncate">{user.name}</span>
+                  </button>
+                  <AnimatePresence>
+                    {profileOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 4, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 4, scale: 0.95 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl shadow-xl p-2"
+                      >
+                        <div className="px-3 py-2 mb-1">
+                          <p className="text-sm font-semibold text-ink-900 dark:text-white">{user.name}</p>
+                          <p className="text-xs text-ink-500 dark:text-ink-400">{user.email}</p>
+                          <span className={`inline-block mt-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                            user.plan === "pro" ? "bg-brand-100 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300" : "bg-ink-100 text-ink-600 dark:bg-ink-800 dark:text-ink-400"
+                          }`}>
+                            {user.plan.toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="h-px bg-ink-100 dark:bg-ink-800 my-1" />
+                        <button
+                          onClick={() => { logout(); setProfileOpen(false); }}
+                          className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors font-medium"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          Выйти
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <Link
+                  href="/auth"
+                  className="flex items-center gap-2 text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-lg transition-colors shadow-sm"
+                >
+                  <User className="w-4 h-4" />
+                  Войти
+                </Link>
+              )}
             </div>
 
             {/* Mobile hamburger */}
