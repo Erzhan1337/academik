@@ -15,7 +15,7 @@ export default function TemplatesPage() {
   const [formData, setFormData] = useState({
     name: "Aigerim S.",
     university: "UCL / Назарбаев Университет",
-    field: "Компьютерные Науки",
+    field: "Компьютерные науки",
     reason: "хочу развивать Data Science в Казахстане",
     gpa: "3.8/4.0",
     experience: "помощник исследователя 1 год",
@@ -25,11 +25,11 @@ export default function TemplatesPage() {
 
   const generateSOP = () => `Dear Admissions Committee of ${formData.university},
 
-I am writing to express my profound interest in applying for the Master's program in ${formData.field}. My name is ${formData.name}, and during my undergraduate studies, I achieved a GPA of ${formData.gpa}.
+I am writing to express my strong interest in the Master's program in ${formData.field}. My name is ${formData.name}, and during my undergraduate studies I achieved a GPA of ${formData.gpa}.
 
-The primary reason I am drawn to your program is my desire to advance my knowledge and skills because ${formData.reason}. My prior experience as a ${formData.experience} has equipped me with practical insights that align perfectly with the curriculum at ${formData.university}.
+I am drawn to this program because ${formData.reason}. My experience as a ${formData.experience} has given me practical skills that align with the curriculum at ${formData.university}.
 
-I am confident that the rigorous academic environment at your institution will provide the ideal platform for my growth. I look forward to contributing to your dynamic community.
+I am confident that the academic environment at your institution will help me grow professionally and contribute meaningfully to the university community.
 
 Sincerely,
 ${formData.name}
@@ -75,7 +75,7 @@ To pursue a Master's degree at ${formData.university} to further specialize in $
         >
           Генератор документов
         </motion.h1>
-        <p className="text-ink-500 dark:text-ink-400">Сгенерируйте базовую структуру для своих IELTS, CV или эссе в один клик</p>
+        <p className="text-ink-500 dark:text-ink-400">Соберите базовую структуру мотивационного письма или CV в один клик</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -99,7 +99,7 @@ To pursue a Master's degree at ${formData.university} to further specialize in $
 
             <div className="flex flex-col gap-4">
               <div>
-                <label className="block text-xs font-semibold text-ink-500 uppercase mb-1.5 dark:text-ink-400">Ваше Имя</label>
+                <label className="block text-xs font-semibold text-ink-500 uppercase mb-1.5 dark:text-ink-400">Ваше имя</label>
                 <input
                   name="name" value={formData.name} onChange={handleChange}
                   className="w-full border border-ink-200 dark:border-ink-800 bg-white dark:bg-ink-950 text-ink-900 dark:text-white rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-brand-500"
@@ -107,7 +107,7 @@ To pursue a Master's degree at ${formData.university} to further specialize in $
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-ink-500 uppercase mb-1.5 dark:text-ink-400">Университет мечты</label>
+                  <label className="block text-xs font-semibold text-ink-500 uppercase mb-1.5 dark:text-ink-400">Университет</label>
                   <input
                     name="university" value={formData.university} onChange={handleChange}
                     className="w-full border border-ink-200 dark:border-ink-800 bg-white dark:bg-ink-950 text-ink-900 dark:text-white rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-brand-500"
@@ -138,7 +138,7 @@ To pursue a Master's degree at ${formData.university} to further specialize in $
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-ink-500 uppercase mb-1.5 dark:text-ink-400">Зачем поступаете?</label>
+                <label className="block text-xs font-semibold text-ink-500 uppercase mb-1.5 dark:text-ink-400">Цель поступления</label>
                 <textarea
                   name="reason" value={formData.reason} onChange={handleChange} rows={2}
                   className="w-full border border-ink-200 dark:border-ink-800 bg-white dark:bg-ink-950 text-ink-900 dark:text-white rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-brand-500 resize-none"
@@ -169,7 +169,7 @@ To pursue a Master's degree at ${formData.university} to further specialize in $
             </pre>
             
             <p className="text-xs text-ink-500 mt-4 border-t border-ink-800 pt-4">
-              * Сгенерированный текст является только начальной структурой. Рекомендуем дополнить его личными историями.
+              * Это черновая структура. Дополните её личными историями, достижениями и конкретными примерами.
             </p>
           </div>
         </motion.div>

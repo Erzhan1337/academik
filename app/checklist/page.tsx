@@ -4,8 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  FileCheck, CheckCircle2, Circle, RotateCcw,
-  ChevronDown, ChevronUp, Award, AlertCircle,
+  RotateCcw, ChevronDown, ChevronUp, Award,
 } from "lucide-react";
 import { PROGRAMS } from "@/lib/data";
 
@@ -73,11 +72,11 @@ export default function ChecklistPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-3xl sm:text-4xl font-bold text-ink-900 mb-2"
+        <h1 className="text-3xl sm:text-4xl font-bold text-ink-900 dark:text-white mb-2"
           style={{ fontFamily: "var(--font-display)" }}>
           Чек-лист документов
         </h1>
-        <p className="text-ink-500">Отслеживай прогресс сбора документов для поступления</p>
+        <p className="text-ink-500 dark:text-ink-400">Отслеживайте готовность документов к подаче заявки</p>
       </motion.div>
 
       {/* Progress cards */}
@@ -87,30 +86,30 @@ export default function ChecklistPage() {
         transition={{ delay: 0.1 }}
         className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8"
       >
-        <div className="bg-white rounded-2xl border border-ink-200 p-5">
-          <div className="text-3xl font-bold text-ink-900 mb-1" style={{ fontFamily: "var(--font-display)" }}>
+        <div className="bg-white dark:bg-ink-900 rounded-2xl border border-ink-200 dark:border-ink-800 p-5">
+          <div className="text-3xl font-bold text-ink-900 dark:text-white mb-1" style={{ fontFamily: "var(--font-display)" }}>
             {progress}%
           </div>
-          <div className="text-sm text-ink-500 mb-3">Общий прогресс</div>
-          <div className="progress-bar">
+          <div className="text-sm text-ink-500 dark:text-ink-400 mb-3">Общий прогресс</div>
+          <div className="progress-bar dark:bg-ink-800">
             <motion.div className="progress-bar-fill" animate={{ width: `${progress}%` }} transition={{ duration: 0.6 }} />
           </div>
         </div>
-        <div className="bg-white rounded-2xl border border-ink-200 p-5">
-          <div className="text-3xl font-bold text-emerald-600 mb-1" style={{ fontFamily: "var(--font-display)" }}>
+        <div className="bg-white dark:bg-ink-900 rounded-2xl border border-ink-200 dark:border-ink-800 p-5">
+          <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-1" style={{ fontFamily: "var(--font-display)" }}>
             {requiredProgress}%
           </div>
-          <div className="text-sm text-ink-500 mb-3">Обязательных собрано</div>
-          <div className="progress-bar">
+          <div className="text-sm text-ink-500 dark:text-ink-400 mb-3">Обязательные документы</div>
+          <div className="progress-bar dark:bg-ink-800">
             <div className="progress-bar-fill" style={{ width: `${requiredProgress}%`, background: "linear-gradient(90deg, #10b981, #059669)" }} />
           </div>
         </div>
-        <div className="bg-white rounded-2xl border border-ink-200 p-5">
-          <div className="text-3xl font-bold text-ink-900 mb-1" style={{ fontFamily: "var(--font-display)" }}>
+        <div className="bg-white dark:bg-ink-900 rounded-2xl border border-ink-200 dark:border-ink-800 p-5">
+          <div className="text-3xl font-bold text-ink-900 dark:text-white mb-1" style={{ fontFamily: "var(--font-display)" }}>
             {totalChecked}/{allDocs.length}
           </div>
-          <div className="text-sm text-ink-500">Документов готово</div>
-          <div className="text-xs text-ink-400 mt-2">{allDocs.length - totalChecked} осталось</div>
+          <div className="text-sm text-ink-500 dark:text-ink-400">Готово документов</div>
+          <div className="text-xs text-ink-400 dark:text-ink-500 mt-2">{allDocs.length - totalChecked} осталось</div>
         </div>
       </motion.div>
 
@@ -125,7 +124,7 @@ export default function ChecklistPage() {
         <select
           value={selectedProgram}
           onChange={(e) => setSelectedProgram(e.target.value)}
-          className="bg-white border border-ink-200 rounded-xl px-3 py-2 text-sm text-ink-700 focus:outline-none focus:ring-2 focus:ring-brand-500 flex-1 max-w-xs"
+          className="bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl px-3 py-2 text-sm text-ink-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 flex-1 max-w-xs"
         >
           <option value="">Общий чек-лист</option>
           {PROGRAMS.map((p) => (
@@ -134,27 +133,27 @@ export default function ChecklistPage() {
         </select>
 
         {/* Bolashak toggle */}
-        <label className="flex items-center gap-2 cursor-pointer bg-white border border-ink-200 rounded-xl px-3 py-2">
+        <label className="flex items-center gap-2 cursor-pointer bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl px-3 py-2">
           <Award className="w-4 h-4 text-amber-500" />
-          <span className="text-sm text-ink-700">+Болашак</span>
+          <span className="text-sm text-ink-700 dark:text-ink-200">Для Болашак</span>
           <div
             onClick={() => setBolashakMode(!bolashakMode)}
-            className={`w-9 h-5 rounded-full relative transition-colors cursor-pointer ${bolashakMode ? "bg-amber-500" : "bg-ink-200"}`}
+            className={`w-9 h-5 rounded-full relative transition-colors cursor-pointer ${bolashakMode ? "bg-amber-500" : "bg-ink-200 dark:bg-ink-700"}`}
           >
-            <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${bolashakMode ? "translate-x-4" : "translate-x-0.5"}`} />
+            <div className={`absolute top-0.5 w-4 h-4 bg-white dark:bg-ink-950 rounded-full shadow transition-transform ${bolashakMode ? "translate-x-4" : "translate-x-0.5"}`} />
           </div>
         </label>
 
         <button
           onClick={resetAll}
-          className="flex items-center gap-1.5 text-sm text-ink-500 hover:text-ink-900 border border-ink-200 bg-white px-3 py-2 rounded-xl transition-colors"
+          className="flex items-center gap-1.5 text-sm text-ink-500 dark:text-ink-400 hover:text-ink-900 dark:hover:text-white border border-ink-200 dark:border-ink-800 bg-white dark:bg-ink-900 px-3 py-2 rounded-xl transition-colors"
         >
           <RotateCcw className="w-3.5 h-3.5" /> Сбросить
         </button>
 
-        <button className="flex items-center gap-1.5 text-sm text-ink-400 border border-dashed border-ink-200 px-3 py-2 rounded-xl cursor-not-allowed">
+        <button className="flex items-center gap-1.5 text-sm text-ink-400 dark:text-ink-500 border border-dashed border-ink-200 dark:border-ink-800 px-3 py-2 rounded-xl cursor-not-allowed">
           Скачать PDF
-          <span className="text-[10px] text-ink-300">— в планах</span>
+          <span className="text-[10px] text-ink-300 dark:text-ink-600">— в планах</span>
         </button>
       </motion.div>
 
@@ -172,20 +171,20 @@ export default function ChecklistPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: ci * 0.07 }}
-              className={`bg-white rounded-2xl border overflow-hidden ${isBolashakCat ? "border-amber-200" : "border-ink-200"}`}
+              className={`bg-white dark:bg-ink-900 rounded-2xl border overflow-hidden ${isBolashakCat ? "border-amber-200 dark:border-amber-500/30" : "border-ink-200 dark:border-ink-800"}`}
             >
               {/* Category header */}
               <div
-                className={`flex items-center justify-between px-5 py-4 cursor-pointer ${isBolashakCat ? "bg-amber-50" : "bg-ink-50"}`}
+                className={`flex items-center justify-between px-5 py-4 cursor-pointer ${isBolashakCat ? "bg-amber-50 dark:bg-amber-500/10" : "bg-ink-50 dark:bg-ink-950/60"}`}
                 onClick={() => toggleCollapse(cat)}
               >
                 <div className="flex items-center gap-3">
                   {isBolashakCat && <Award className="w-4 h-4 text-amber-500" />}
-                  <h3 className="font-semibold text-ink-900 text-sm">{cat}</h3>
+                  <h3 className="font-semibold text-ink-900 dark:text-white text-sm">{cat}</h3>
                   <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                     catChecked === catDocs.length
-                      ? "bg-emerald-100 text-emerald-700"
-                      : "bg-ink-200 text-ink-600"
+                      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
+                      : "bg-ink-200 text-ink-600 dark:bg-ink-800 dark:text-ink-300"
                   }`}>
                     {catChecked}/{catDocs.length}
                   </span>
@@ -193,7 +192,7 @@ export default function ChecklistPage() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={(e) => { e.stopPropagation(); toggleCategory(cat); }}
-                    className="text-xs font-medium text-brand-600 hover:underline"
+                    className="text-xs font-medium text-brand-600 dark:text-brand-400 hover:underline"
                   >
                     {catDocs.every((d) => checked.includes(d.id)) ? "Снять всё" : "Отметить всё"}
                   </button>
@@ -220,12 +219,12 @@ export default function ChecklistPage() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: di * 0.04 }}
                           >
-                            <label className="flex items-center gap-3 py-2.5 cursor-pointer group border-b border-ink-50 last:border-0">
+                            <label className="flex items-center gap-3 py-2.5 cursor-pointer group border-b border-ink-50 dark:border-ink-800/70 last:border-0">
                               <input type="checkbox" className="sr-only" checked={done} onChange={() => toggleDoc(doc.id)} />
                               <motion.div
                                 whileTap={{ scale: 0.85 }}
                                 className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                                  done ? "border-emerald-500 bg-emerald-500" : "border-ink-300 group-hover:border-brand-400"
+                                  done ? "border-emerald-500 bg-emerald-500" : "border-ink-300 dark:border-ink-700 group-hover:border-brand-400"
                                 }`}
                               >
                                 {done && (
@@ -242,14 +241,14 @@ export default function ChecklistPage() {
                                   </motion.svg>
                                 )}
                               </motion.div>
-                              <span className={`flex-1 text-sm transition-colors ${done ? "line-through text-ink-400" : "text-ink-700"}`}>
+                              <span className={`flex-1 text-sm transition-colors ${done ? "line-through text-ink-400 dark:text-ink-500" : "text-ink-700 dark:text-ink-200"}`}>
                                 {doc.name}
                               </span>
                               {doc.required && !done && (
-                                <span className="text-xs text-red-500 font-medium shrink-0">обязательно</span>
+                                <span className="text-xs text-red-500 dark:text-red-400 font-medium shrink-0">Обязательно</span>
                               )}
                               {done && (
-                                <span className="text-xs text-emerald-600 font-medium shrink-0">готово ✓</span>
+                                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium shrink-0">Готово ✓</span>
                               )}
                             </label>
                           </motion.li>
@@ -271,18 +270,18 @@ export default function ChecklistPage() {
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="mt-8 bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center"
+            className="mt-8 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 rounded-2xl p-6 text-center"
           >
             <div className="text-4xl mb-3">🎉</div>
-            <h3 className="text-xl font-bold text-emerald-800 mb-1" style={{ fontFamily: "var(--font-display)" }}>
+            <h3 className="text-xl font-bold text-emerald-800 dark:text-emerald-300 mb-1" style={{ fontFamily: "var(--font-display)" }}>
               Все документы готовы!
             </h3>
-            <p className="text-emerald-700 text-sm mb-4">
-              Отличная работа! Теперь можно переходить к подаче заявки.
+            <p className="text-emerald-700 dark:text-emerald-200 text-sm mb-4">
+              Документы собраны. Теперь можно переходить к выбору программы и подаче заявки.
             </p>
             <Link href="/programs">
               <div className="inline-flex items-center gap-2 bg-emerald-600 text-white font-semibold px-5 py-2.5 rounded-xl text-sm cursor-pointer hover:bg-emerald-700 transition-colors">
-                Найти программу для подачи
+                Найти программу
               </div>
             </Link>
           </motion.div>

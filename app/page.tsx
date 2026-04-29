@@ -37,19 +37,19 @@ const STEPS = [
     icon: SlidersHorizontal,
     color: "bg-brand-50 text-brand-600",
     title: "Выбери программу",
-    desc: "Фильтруй по городу, стоимости, языку и дедлайнам. Найди идеальный вариант за пару минут.",
+    desc: "Фильтруйте по городу, стоимости, языку и срокам подачи. Подберите подходящую программу за пару минут.",
   },
   {
     icon: FileCheck,
     color: "bg-emerald-50 text-emerald-600",
     title: "Собери документы",
-    desc: "Получи персональный чек-лист документов и отслеживай прогресс их подготовки.",
+    desc: "Используйте чек-лист документов и отслеживайте готовность к подаче заявки.",
   },
   {
     icon: Award,
     color: "bg-amber-50 text-amber-600",
     title: "Проверь Болашак",
-    desc: "Узнай, подходишь ли ты под условия государственного гранта и какие программы участвуют.",
+    desc: "Проверьте базовые требования гранта и найдите программы, которые подходят для Болашак.",
   },
 ];
 
@@ -97,7 +97,7 @@ export default function HomePage() {
             className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/80 text-sm px-4 py-1.5 rounded-full border border-white/20 mb-8"
           >
             <Sparkles className="w-3.5 h-3.5 text-gold-400" />
-            Умный подбор магистратуры в Казахстане
+            Подбор магистратуры в Казахстане
           </motion.div>
 
           <motion.h1
@@ -107,7 +107,7 @@ export default function HomePage() {
             className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            Найди свою{" "}
+            Найдите свою{" "}
             <span className="relative inline-block">
               <span className="gold-text">магистратуру</span>
             </span>
@@ -120,8 +120,8 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-lg text-white/70 mb-10 max-w-2xl mx-auto leading-relaxed"
           >
-            Фильтруй программы, отслеживай дедлайны, готовь документы и
-            проверяй возможности гранта Болашак — всё в одном месте.
+            Сравнивайте программы, следите за сроками подачи, готовьте документы
+            и проверяйте возможности гранта Болашак — всё в одном месте.
           </motion.p>
 
           {/* Search bar */}
@@ -162,7 +162,7 @@ export default function HomePage() {
               href="/programs"
               className="flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors"
             >
-              Все программы <ArrowRight className="w-3.5 h-3.5" />
+              Смотреть программы <ArrowRight className="w-3.5 h-3.5" />
             </Link>
             <span className="text-white/20">|</span>
             <Link
@@ -170,7 +170,7 @@ export default function HomePage() {
               className="flex items-center gap-2 text-sm text-gold-400 hover:text-gold-300 transition-colors"
             >
               <Award className="w-3.5 h-3.5" />
-              Гид по Болашак
+              Гид по программе Болашак
             </Link>
           </motion.div>
         </div>
@@ -217,7 +217,7 @@ export default function HomePage() {
             className="text-3xl sm:text-4xl font-bold text-ink-900"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            Три шага до поступления
+            Три шага к поступлению
           </h2>
         </motion.div>
 
@@ -251,26 +251,27 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="relative overflow-hidden bg-gradient-to-r from-amber-500 to-amber-600 rounded-3xl p-8 sm:p-10 text-white"
+          className="relative overflow-hidden bg-gradient-to-r from-amber-500 to-amber-600 dark:from-ink-950 dark:via-amber-950 dark:to-ink-900 rounded-3xl border border-transparent dark:border-amber-500/20 p-8 sm:p-10 text-white shadow-sm dark:shadow-[0_24px_80px_-40px_rgba(245,158,11,0.45)]"
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 dark:bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute inset-x-0 top-0 h-px bg-white/30 dark:bg-amber-300/30" />
           <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
-              <Award className="w-7 h-7 text-white" />
+            <div className="w-14 h-14 bg-white/20 dark:bg-amber-500/15 rounded-2xl flex items-center justify-center shrink-0 ring-1 ring-white/20 dark:ring-amber-400/25">
+              <Award className="w-7 h-7 text-white dark:text-amber-300" />
             </div>
             <div className="flex-1">
               <h3 className="text-xl sm:text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-display)" }}>
                 Стипендия Болашак
               </h3>
-              <p className="text-white/80 text-sm leading-relaxed max-w-xl">
-                Государственный грант покрывает полную стоимость обучения за рубежом.
-                Узнай условия, требования и подходящие университеты.
+              <p className="text-white/80 dark:text-ink-300 text-sm leading-relaxed max-w-xl">
+                Государственный грант покрывает обучение за рубежом.
+                Посмотрите требования, сроки и подходящие программы.
               </p>
             </div>
             <Link href="/bolashak">
               <motion.div
                 whileHover={{ x: 4 }}
-                className="flex items-center gap-2 bg-white text-amber-600 font-semibold text-sm px-5 py-3 rounded-xl cursor-pointer whitespace-nowrap"
+                className="flex items-center gap-2 bg-white dark:bg-amber-400 text-amber-600 dark:text-ink-950 font-semibold text-sm px-5 py-3 rounded-xl cursor-pointer whitespace-nowrap transition-colors dark:hover:bg-amber-300"
               >
                 Узнать больше <ChevronRight className="w-4 h-4" />
               </motion.div>
@@ -288,20 +289,20 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             <p className="text-sm font-semibold text-brand-600 uppercase tracking-widest mb-1">
-              Топ программы
+              Рекомендуемые программы
             </p>
             <h2
               className="text-2xl sm:text-3xl font-bold text-ink-900"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              Программы с Болашак
+              Программы, подходящие для Болашак
             </h2>
           </motion.div>
           <Link
             href="/programs?bolashak=true"
             className="hidden sm:flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors"
           >
-            Все программы <ArrowRight className="w-4 h-4" />
+            Смотреть все <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -316,7 +317,7 @@ export default function HomePage() {
             href="/programs"
             className="inline-flex items-center gap-2 text-sm font-medium text-brand-600"
           >
-            Посмотреть все программы <ArrowRight className="w-4 h-4" />
+            Смотреть все программы <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>
@@ -333,10 +334,10 @@ export default function HomePage() {
             className="text-3xl font-bold mb-3"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            Готов начать?
+            Готовы начать?
           </h2>
           <p className="text-white/80 mb-8 max-w-md mx-auto">
-            Более 500 программ магистратуры в одном месте. Найди свою сейчас.
+            Более 500 программ магистратуры в одном месте. Найдите подходящую уже сейчас.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link href="/programs">

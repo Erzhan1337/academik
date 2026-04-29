@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Calculator, PieChart, Info, MapPin } from "lucide-react";
+import { Calculator, Info, MapPin } from "lucide-react";
 
 export default function CalculatorPage() {
   const [tuition, setTuition] = useState(1500); // 1.5M KZT
@@ -22,8 +22,6 @@ export default function CalculatorPage() {
   const totalMonthly = housing + food + transport;
   const totalLivingYear = totalMonthly * 10; // Assuming 10 months academic year
   const grandTotal = tuition + totalLivingYear;
-  const isBolashakCovered = true; // For Bolashak, living expenses + tuition are covered
-
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
       <div className="mb-8">
@@ -35,7 +33,7 @@ export default function CalculatorPage() {
         >
           Калькулятор бюджета
         </motion.h1>
-        <p className="text-ink-500 dark:text-ink-400">Просчитайте примерные расходы на магистратуру в год</p>
+        <p className="text-ink-500 dark:text-ink-400">Оцените примерный бюджет на один год магистратуры</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -50,7 +48,7 @@ export default function CalculatorPage() {
             {/* Tuition */}
             <div>
               <div className="flex items-center justify-between mb-4">
-                <label className="font-semibold text-ink-900 dark:text-white">Обучение в год</label>
+                <label className="font-semibold text-ink-900 dark:text-white">Стоимость обучения в год</label>
                 <div className="text-xl font-bold text-brand-600 dark:text-brand-400">
                   {tuition.toLocaleString("ru")} 000 ₸
                 </div>
@@ -61,8 +59,8 @@ export default function CalculatorPage() {
                 className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-ink-200 dark:bg-ink-800 accent-brand-600"
               />
               <div className="flex justify-between text-xs text-ink-400 dark:text-ink-500 mt-2">
-                <span>0 (Грант)</span>
-                <span>Ввести вручную можно ползунком до 5 млн.</span>
+                <span>0 ₸ (грант)</span>
+                <span>Передвиньте ползунок, чтобы выбрать сумму до 5 млн ₸.</span>
               </div>
             </div>
 
@@ -70,7 +68,7 @@ export default function CalculatorPage() {
 
             {/* Quick cities */}
             <div>
-              <label className="text-sm font-semibold text-ink-900 dark:text-white mb-3 block">Быстрый пресет города</label>
+              <label className="text-sm font-semibold text-ink-900 dark:text-white mb-3 block">Пресет по городу</label>
               <div className="flex flex-wrap gap-2">
                 {["Алматы", "Астана", "Шымкент", "Караганда"].map(c => (
                   <button
@@ -148,15 +146,15 @@ export default function CalculatorPage() {
               </div>
               <div className="flex justify-between items-center bg-white/5 rounded-xl px-4 py-3">
                 <div className="flex flex-col">
-                  <span className="text-sm text-ink-300">Учеба + Проживание</span>
-                  <span className="text-[10px] text-ink-500">(10 мес. академ. год)</span>
+                  <span className="text-sm text-ink-300">Обучение + проживание</span>
+                  <span className="text-[10px] text-ink-500">(10 месяцев учебного года)</span>
                 </div>
                 <span className="font-bold">{grandTotal.toLocaleString("ru")} 000 ₸</span>
               </div>
             </div>
 
             <div className="border-t border-ink-800 pt-6 mb-2">
-              <span className="text-sm text-ink-400 block mb-1">Итого за 1 год</span>
+              <span className="text-sm text-ink-400 block mb-1">Итого за год</span>
               <div className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-300 to-brand-500" style={{ fontFamily: "var(--font-display)" }}>
                 {grandTotal.toLocaleString("ru")} 000 ₸
               </div>
@@ -165,7 +163,7 @@ export default function CalculatorPage() {
             <div className="mt-8 bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex gap-3 text-amber-100">
               <Info className="w-5 h-5 text-amber-500 shrink-0" />
               <p className="text-xs leading-relaxed">
-                Стипендия <strong>Болашак</strong> полностью покрывает как стоимость обучения ({tuition}к ₸), так и расходы на проживание (стипендия от $1200+ в мес.). При гранте ваши расходы могут быть 0 ₸.
+                Стипендия <strong>Болашак</strong> может покрывать обучение ({tuition}к ₸) и расходы на проживание. При полном финансировании ваши личные расходы могут быть близки к 0 ₸.
               </p>
             </div>
           </div>

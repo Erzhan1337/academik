@@ -10,10 +10,10 @@ import {
 import { PROGRAMS, BOLASHAK_QUIZ } from "@/lib/data";
 
 const REQUIREMENTS = [
-  { icon: GraduationCap, title: "Образование", desc: "Диплом бакалавра с отличием (красный диплом) или высокий GPA" },
+  { icon: GraduationCap, title: "Образование", desc: "Диплом бакалавра с отличием или высокий GPA" },
   { icon: Globe, title: "Гражданство", desc: "Гражданин Республики Казахстан" },
-  { icon: Calendar, title: "Возраст", desc: "До 30 лет для магистратуры, до 35 для докторантуры" },
-  { icon: FileText, title: "Обязательства", desc: "Обязательное возвращение и работа в Казахстане после обучения" },
+  { icon: Calendar, title: "Возраст", desc: "До 30 лет для магистратуры и до 35 лет для докторантуры" },
+  { icon: FileText, title: "Обязательства", desc: "Возвращение и работа в Казахстане после завершения обучения" },
 ];
 
 const PARTNER_UNIS = [
@@ -55,17 +55,18 @@ export default function BolashakPage() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-amber-500 via-amber-600 to-orange-600 pt-32 pb-20 px-4">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-3xl pointer-events-none" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-amber-500 via-amber-600 to-orange-600 dark:from-ink-950 dark:via-amber-950 dark:to-ink-900 pt-32 pb-20 px-4 border-b border-transparent dark:border-amber-500/20">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 dark:bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 dark:bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-px bg-white/30 dark:bg-amber-300/30" />
         <div className="relative max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: "spring", bounce: 0.4 }}
-            className="w-20 h-20 bg-white/20 rounded-3xl flex items-center justify-center mx-auto mb-6"
+            className="w-20 h-20 bg-white/20 dark:bg-amber-500/15 rounded-3xl flex items-center justify-center mx-auto mb-6 ring-1 ring-white/20 dark:ring-amber-400/25"
           >
-            <Award className="w-10 h-10 text-white" />
+            <Award className="w-10 h-10 text-white dark:text-amber-300" />
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -80,10 +81,10 @@ export default function BolashakPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-white/85 text-lg max-w-2xl mx-auto mb-8"
+            className="text-white/85 dark:text-ink-300 text-lg max-w-2xl mx-auto mb-8"
           >
             Государственная программа Казахстана, которая финансирует обучение
-            лучших студентов в топовых университетах мира
+            сильных кандидатов в ведущих университетах мира
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -92,13 +93,13 @@ export default function BolashakPage() {
             className="flex flex-wrap justify-center gap-4 text-white"
           >
             {[
-              ["3000+", "Стипендиатов ежегодно"],
-              ["120+", "Стран обучения"],
+              ["3000+", "стипендий в год"],
+              ["120+", "стран для обучения"],
               ["100%", "Покрытие стоимости"],
             ].map(([num, label]) => (
-              <div key={label} className="bg-white/15 backdrop-blur rounded-2xl px-6 py-4 text-center">
+              <div key={label} className="bg-white/15 dark:bg-white/5 backdrop-blur rounded-2xl border border-white/10 dark:border-amber-500/15 px-6 py-4 text-center">
                 <div className="text-2xl font-bold" style={{ fontFamily: "var(--font-display)" }}>{num}</div>
-                <div className="text-sm text-white/80">{label}</div>
+                <div className="text-sm text-white/80 dark:text-ink-300">{label}</div>
               </div>
             ))}
           </motion.div>
@@ -143,12 +144,12 @@ export default function BolashakPage() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-gradient-to-br from-ink-900 to-ink-800 rounded-3xl p-8 text-white"
+          className="bg-gradient-to-br from-amber-50 via-white to-white dark:from-ink-900 dark:to-ink-800 rounded-3xl border border-amber-200 dark:border-transparent p-8 text-ink-900 dark:text-white shadow-sm"
         >
           <h2 className="text-xl font-bold mb-2" style={{ fontFamily: "var(--font-display)" }}>
             Проверь соответствие
           </h2>
-          <p className="text-ink-400 text-sm mb-6">4 вопроса — узнай, подходишь ли ты под условия Болашак</p>
+          <p className="text-ink-500 dark:text-ink-400 text-sm mb-6">4 вопроса — проверьте базовое соответствие требованиям Болашак</p>
 
           <AnimatePresence mode="wait">
             {!showResult ? (
@@ -158,11 +159,11 @@ export default function BolashakPage() {
                   {BOLASHAK_QUIZ.map((_, i) => (
                     <div
                       key={i}
-                      className={`h-1 flex-1 rounded-full transition-colors ${i <= quizStep ? "bg-amber-500" : "bg-white/20"}`}
+                      className={`h-1 flex-1 rounded-full transition-colors ${i <= quizStep ? "bg-amber-500" : "bg-amber-100 dark:bg-white/20"}`}
                     />
                   ))}
                 </div>
-                <p className="text-sm text-amber-400 mb-2">Вопрос {quizStep + 1} из {BOLASHAK_QUIZ.length}</p>
+                <p className="text-sm text-amber-600 dark:text-amber-400 mb-2">Вопрос {quizStep + 1} из {BOLASHAK_QUIZ.length}</p>
                 <h3 className="text-lg font-semibold mb-5">{BOLASHAK_QUIZ[quizStep].question}</h3>
                 <div className="flex flex-col gap-2.5">
                   {BOLASHAK_QUIZ[quizStep].options.map((opt) => (
@@ -171,7 +172,7 @@ export default function BolashakPage() {
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleAnswer(opt)}
-                      className="text-left px-4 py-3 rounded-xl border border-white/20 hover:border-amber-400 hover:bg-amber-500/10 text-sm font-medium transition-all"
+                      className="text-left px-4 py-3 rounded-xl border border-amber-200 dark:border-white/20 bg-white/70 dark:bg-transparent hover:border-amber-400 hover:bg-amber-100/70 dark:hover:bg-amber-500/10 text-sm font-medium transition-all"
                     >
                       {opt}
                     </motion.button>
@@ -187,34 +188,34 @@ export default function BolashakPage() {
               >
                 {eligible ? (
                   <>
-                    <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-display)" }}>
-                      Вы подходите! 🎉
+                    <CheckCircle2 className="w-16 h-16 text-emerald-500 dark:text-emerald-400 mx-auto mb-4" />
+                    <h3 className="text-2xl font-bold text-ink-900 dark:text-white mb-2" style={{ fontFamily: "var(--font-display)" }}>
+                      Вы соответствуете базовым требованиям
                     </h3>
-                    <p className="text-ink-400 text-sm mb-6">
-                      По вашим ответам вы соответствуете базовым требованиям Болашак.
-                      Рекомендуем ознакомиться с программами и начать подготовку документов.
+                    <p className="text-ink-500 dark:text-ink-400 text-sm mb-6">
+                      По вашим ответам вы проходите базовую проверку по требованиям Болашак.
+                      Следующий шаг — выбрать программу и начать подготовку документов.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
                       <Link href="/programs?bolashak=true">
-                        <div className="bg-amber-500 hover:bg-amber-400 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-colors cursor-pointer flex items-center gap-2 justify-center">
-                          Программы Болашак <ArrowRight className="w-4 h-4" />
+                        <div className="bg-amber-500 hover:bg-amber-400 text-white dark:text-white font-semibold px-6 py-3 rounded-xl text-sm transition-colors cursor-pointer flex items-center gap-2 justify-center">
+                          Смотреть программы <ArrowRight className="w-4 h-4" />
                         </div>
                       </Link>
-                      <button onClick={resetQuiz} className="text-ink-400 hover:text-white text-sm underline">
+                      <button onClick={resetQuiz} className="text-ink-500 dark:text-ink-400 hover:text-ink-900 dark:hover:text-white text-sm underline">
                         Пройти снова
                       </button>
                     </div>
                   </>
                 ) : (
                   <>
-                    <XCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-display)" }}>
-                      Пока не подходит
+                    <XCircle className="w-16 h-16 text-red-500 dark:text-red-400 mx-auto mb-4" />
+                    <h3 className="text-2xl font-bold text-ink-900 dark:text-white mb-2" style={{ fontFamily: "var(--font-display)" }}>
+                      Пока есть ограничения
                     </h3>
-                    <p className="text-ink-400 text-sm mb-6">
-                      По некоторым критериям вы не соответствуете. Но есть другие
-                      отличные гранты и программы с частичным финансированием.
+                    <p className="text-ink-500 dark:text-ink-400 text-sm mb-6">
+                      По некоторым критериям есть несоответствия. Посмотрите другие
+                      гранты и программы с частичным финансированием.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
                       <Link href="/programs">
@@ -222,7 +223,7 @@ export default function BolashakPage() {
                           Другие программы <ArrowRight className="w-4 h-4" />
                         </div>
                       </Link>
-                      <button onClick={resetQuiz} className="text-ink-400 hover:text-white text-sm underline">
+                      <button onClick={resetQuiz} className="text-ink-500 dark:text-ink-400 hover:text-ink-900 dark:hover:text-white text-sm underline">
                         Пройти снова
                       </button>
                     </div>
@@ -261,7 +262,7 @@ export default function BolashakPage() {
           ))}
         </div>
         <p className="text-sm text-ink-400 mt-3">
-          * Это примерный список. Полный список на официальном сайте Болашак.
+          * Это примерный список. Актуальный перечень смотрите на официальном сайте Болашак.
         </p>
       </section>
 
@@ -269,10 +270,10 @@ export default function BolashakPage() {
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-ink-900 dark:text-white" style={{ fontFamily: "var(--font-display)" }}>
-            Программы в Казахстане с Болашак
+            Программы, подходящие для Болашак
           </h2>
           <Link href="/programs?bolashak=true" className="text-sm font-medium text-brand-600 flex items-center gap-1 hover:underline">
-            Все <ChevronRight className="w-4 h-4" />
+            Смотреть все <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

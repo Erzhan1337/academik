@@ -12,7 +12,7 @@ import {
 import { PROGRAMS } from "@/lib/data";
 import { useCompareStore } from "@/lib/compare-store";
 
-const TABS = ["Обзор", "Требования", "Документы", "Дедлайны", "Отзывы и Q&A"] as const;
+const TABS = ["Обзор", "Требования", "Документы", "Сроки", "Отзывы и вопросы"] as const;
 
 export default function ProgramDetailPage({
   params,
@@ -192,24 +192,24 @@ export default function ProgramDetailPage({
                     </ul>
                   </motion.div>
                 )}
-                {tab === "Дедлайны" && (
+                {tab === "Сроки" && (
                   <motion.div key="deadlines"
                     initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
                     <div className="flex items-center gap-4 p-4 bg-amber-50 rounded-xl border border-amber-200 mb-4">
                       <Calendar className="w-8 h-8 text-amber-500 shrink-0" />
                       <div>
-                        <div className="font-semibold text-ink-900">Дедлайн подачи</div>
+                        <div className="font-semibold text-ink-900">Срок подачи</div>
                         <div className="text-2xl font-bold text-amber-600" style={{ fontFamily: "var(--font-display)" }}>
                           {program.deadlineLabel}
                         </div>
                       </div>
                     </div>
                     <p className="text-sm text-ink-500 leading-relaxed">
-                      Убедитесь, что все документы собраны заранее. Рекомендуем начать подготовку за 4–6 недель до дедлайна.
+                      Убедитесь, что документы готовы заранее. Рекомендуем начать подготовку за 4–6 недель до срока подачи.
                     </p>
                   </motion.div>
                 )}
-                {tab === "Отзывы и Q&A" && (
+                {tab === "Отзывы и вопросы" && (
                   <motion.div key="reviews"
                     initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
                     
@@ -250,7 +250,7 @@ export default function ProgramDetailPage({
                     </div>
 
                     <div>
-                      <h3 className="font-bold text-ink-900 dark:text-white mb-4">Часто задаваемые вопросы (Q&A)</h3>
+                      <h3 className="font-bold text-ink-900 dark:text-white mb-4">Часто задаваемые вопросы</h3>
                       <div className="flex flex-col gap-3">
                         <div className="border border-ink-200 dark:border-ink-800 rounded-xl p-4">
                           <div className="font-semibold text-sm mb-1 dark:text-white">Есть ли общежитие?</div>
@@ -290,7 +290,7 @@ export default function ProgramDetailPage({
                 className="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors"
               >
                 <Bell className="w-4 h-4" />
-                Напомнить о дедлайне
+                Напомнить о сроке подачи
               </button>
               <button
                 onClick={() => inCompare ? remove(program.id) : add(program)}
@@ -317,7 +317,7 @@ export default function ProgramDetailPage({
               </button>
               <button className="w-full flex items-center justify-center gap-2 bg-ink-900 text-white text-sm font-semibold py-2.5 rounded-xl opacity-50 cursor-not-allowed">
                 Подать заявку
-                <span className="text-[10px] font-normal opacity-70">— в будущих планах</span>
+                <span className="text-[10px] font-normal opacity-70">— скоро</span>
               </button>
             </div>
           </div>
@@ -330,8 +330,8 @@ export default function ProgramDetailPage({
                 ["Город", program.city],
                 ["Длительность", program.duration],
                 ["Язык", program.language.join(", ")],
-                ["Студентов", program.students.toLocaleString("ru")],
-                ["Болашак", program.bolashak ? "✓ Подходит" : "✗ Не входит"],
+                ["Студенты", program.students.toLocaleString("ru")],
+                ["Болашак", program.bolashak ? "✓ Подходит" : "✗ Нет"],
               ].map(([k, v]) => (
                 <div key={k} className="flex items-center justify-between">
                   <span className="text-ink-500">{k}</span>
@@ -360,7 +360,7 @@ export default function ProgramDetailPage({
               className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-ink-900">Напоминание о дедлайне</h3>
+                <h3 className="font-bold text-ink-900">Напоминание о сроке подачи</h3>
                 <button onClick={() => setShowModal(false)} className="text-ink-400 hover:text-ink-700">
                   <X className="w-5 h-5" />
                 </button>
@@ -368,7 +368,7 @@ export default function ProgramDetailPage({
               {!submitted ? (
                 <form onSubmit={handleReminderSubmit}>
                   <p className="text-sm text-ink-500 mb-4">
-                    Мы пришлём напоминание на email за неделю до дедлайна{" "}
+                    Мы пришлём напоминание на email за неделю до срока подачи{" "}
                     <strong className="text-amber-600">{program.deadlineLabel}</strong>.
                   </p>
                   <input
@@ -394,7 +394,7 @@ export default function ProgramDetailPage({
                 >
                   <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-2" />
                   <p className="font-semibold text-ink-900">Готово!</p>
-                  <p className="text-sm text-ink-500 mt-1">Напоминание отправлено на {email}</p>
+                  <p className="text-sm text-ink-500 mt-1">Напоминание будет отправлено на {email}</p>
                 </motion.div>
               )}
             </motion.div>

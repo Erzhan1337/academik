@@ -2,8 +2,10 @@
 
 import { motion } from "motion/react";
 import Link from "next/link";
-import { Calendar as CalendarIcon, ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
+import { Calendar as CalendarIcon, ArrowRight, ExternalLink } from "lucide-react";
 import { useCompareStore } from "@/lib/compare-store";
+
+const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
 const generateGoogleCalendarUrl = (title: string, dateStr: string) => {
   const d = new Date(dateStr);
@@ -13,8 +15,48 @@ const generateGoogleCalendarUrl = (title: string, dateStr: string) => {
   endD.setDate(endD.getDate() + 1);
   const end = endD.toISOString().replace(/-|:|\.\d\d\d/g, "");
   
-  const text = encodeURIComponent(`Дедлайн подачи: ${title}`);
+  const text = encodeURIComponent(`Срок подачи: ${title}`);
   return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${start}/${end}&sf=true&output=xml`;
+};
+
+const getDeadlineStatus = (dateStr: string) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const deadline = new Date(dateStr);
+  deadline.setHours(0, 0, 0, 0);
+
+  const diffDays = Math.ceil((deadline.getTime() - today.getTime()) / DAY_IN_MS);
+
+  if (diffDays < 0) {
+    return {
+      label: "Срок подачи прошёл",
+      className: "bg-red-50 text-red-700 border-red-100 dark:bg-red-500/10 dark:text-red-300 dark:border-red-500/20",
+      dotClassName: "bg-red-500",
+    };
+  }
+
+  if (diffDays === 0) {
+    return {
+      label: "Последний день подачи",
+      className: "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/20",
+      dotClassName: "bg-amber-500",
+    };
+  }
+
+  if (diffDays <= 14) {
+    return {
+      label: `Осталось ${diffDays} дн.`,
+      className: "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/20",
+      dotClassName: "bg-amber-500",
+    };
+  }
+
+  return {
+    label: `Осталось ${diffDays} дн.`,
+    className: "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/20",
+    dotClassName: "bg-brand-600",
+  };
 };
 
 export default function CalendarPage() {
@@ -29,9 +71,9 @@ export default function CalendarPage() {
           className="text-3xl sm:text-4xl font-bold text-ink-900 dark:text-white mb-2"
           style={{ fontFamily: "var(--font-display)" }}
         >
-          Календарь дедлайнов
+          Календарь сроков подачи
         </motion.h1>
-        <p className="text-ink-500 dark:text-ink-400">Следите за датами окончания приема документов</p>
+        <p className="text-ink-500 dark:text-ink-400">Следите за сроками подачи документов по выбранным программам</p>
       </div>
 
       {favorites.length === 0 ? (
@@ -51,47 +93,56 @@ export default function CalendarPage() {
         </motion.div>
       ) : (
         <div className="flex flex-col gap-4 relative before:absolute before:inset-y-0 before:left-6 before:w-px before:bg-ink-200 dark:before:bg-ink-800">
-          {favorites.map((p, i) => (
-            <motion.div
-              key={p.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.05 }}
-              className="relative pl-14"
-            >
-              <div className="absolute left-4 top-5 w-4 h-4 rounded-full bg-brand-600 border-4 border-white dark:border-ink-950" />
+          {favorites.map((p, i) => {
+            const status = getDeadlineStatus(p.deadline);
+
+            return (
+              <motion.div
+                key={p.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className="relative pl-14"
+              >
+                <div className={`absolute left-4 top-5 w-4 h-4 rounded-full border-4 border-white dark:border-ink-950 ${status.dotClassName}`} />
               
-              <div className="bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-2xl p-5 card-hover flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
-                <div>
-                  <div className="text-brand-600 dark:text-brand-400 font-bold mb-1">
-                    {p.deadlineLabel}
+                <div className="bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-2xl p-5 card-hover flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
+                  <div>
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      <span className="font-bold text-brand-600 dark:text-brand-400">
+                        {p.deadlineLabel}
+                      </span>
+                      <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${status.className}`}>
+                        {status.label}
+                      </span>
+                    </div>
+                    <Link href={`/programs/${p.id}`}>
+                      <h3 className="text-lg font-semibold text-ink-900 dark:text-white hover:underline mb-1">
+                        {p.title}
+                      </h3>
+                    </Link>
+                    <p className="text-sm text-ink-500 dark:text-ink-400">{p.university} • {p.city}</p>
                   </div>
-                  <Link href={`/programs/${p.id}`}>
-                    <h3 className="text-lg font-semibold text-ink-900 dark:text-white hover:underline mb-1">
-                      {p.title}
-                    </h3>
-                  </Link>
-                  <p className="text-sm text-ink-500 dark:text-ink-400">{p.university} • {p.city}</p>
-                </div>
                 
-                <div className="flex flex-wrap sm:flex-col gap-2 shrink-0">
-                  <a
-                    href={generateGoogleCalendarUrl(p.title, p.deadline)}
-                    target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-xs text-white bg-ink-900 dark:bg-white dark:text-ink-900 hover:bg-brand-600 dark:hover:bg-brand-500 font-semibold px-3 py-2 rounded-lg transition-colors"
-                  >
-                    Google Календарь <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                  <button
-                    onClick={() => toggleFavorite(p)}
-                    className="flex items-center gap-1.5 text-xs text-red-600 hover:bg-red-50 dark:hover:bg-red-950 px-3 py-2 rounded-lg transition-colors font-medium border border-transparent hover:border-red-200 dark:hover:border-red-900"
-                  >
-                    Убрать
-                  </button>
+                  <div className="flex flex-wrap sm:flex-col gap-2 shrink-0">
+                    <a
+                      href={generateGoogleCalendarUrl(p.title, p.deadline)}
+                      target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-xs text-white bg-ink-900 dark:bg-white dark:text-ink-900 hover:bg-brand-600 dark:hover:bg-brand-500 font-semibold px-3 py-2 rounded-lg transition-colors"
+                    >
+                    Добавить в Google Календарь <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                    <button
+                      onClick={() => toggleFavorite(p)}
+                      className="flex items-center gap-1.5 text-xs text-red-600 hover:bg-red-50 dark:hover:bg-red-950 px-3 py-2 rounded-lg transition-colors font-medium border border-transparent hover:border-red-200 dark:hover:border-red-900"
+                    >
+                      Удалить
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       )}
     </div>

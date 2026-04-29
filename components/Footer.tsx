@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GraduationCap, Mail, Phone, MapPin } from "lucide-react";
+import { GraduationCap, Mail, MapPin } from "lucide-react";
 
 const LINKS = {
   platform: [
@@ -31,16 +31,16 @@ export function Footer() {
                 className="text-xl font-bold tracking-tight"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                Academi<span className="text-brand-400">.kz</span>
+                Academik<span className="text-brand-400">.kz</span>
               </span>
             </div>
             <p className="text-ink-400 text-sm leading-relaxed mb-6">
-              Умная платформа для поступления в магистратуру в Казахстане.
+              Платформа для выбора магистратуры и подготовки к поступлению в Казахстане.
             </p>
             <div className="flex flex-col gap-2 text-sm text-ink-400">
-              <a href="mailto:hello@academi.kz" className="flex items-center gap-2 hover:text-white transition-colors">
+              <a href="mailto:hello@academik.kz" className="flex items-center gap-2 hover:text-white transition-colors">
                 <Mail className="w-3.5 h-3.5" />
-                hello@academi.kz
+                hello@academik.kz
               </a>
               <span className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5" />
@@ -79,9 +79,9 @@ export function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-4 uppercase tracking-wider">Дедлайны на почту</h4>
+            <h4 className="text-sm font-semibold text-white mb-4 uppercase tracking-wider">Сроки на почту</h4>
             <p className="text-sm text-ink-400 mb-4">
-              Получайте напоминания о дедлайнах и советы по поступлению.
+              Получайте напоминания о сроках подачи и полезные советы по поступлению.
             </p>
             <div className="flex gap-2">
               <input
@@ -98,7 +98,7 @@ export function Footer() {
 
         <div className="mt-12 pt-6 border-t border-ink-800 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-ink-500">
-            © 2025 Academi.kz. Все права защищены.
+            © 2025 Academik.kz. Все права защищены.
           </p>
           <div className="flex gap-4 text-xs text-ink-500">
             <a href="#" className="hover:text-white transition-colors">Политика конфиденциальности</a>

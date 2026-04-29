@@ -7,9 +7,9 @@ import { CompareBar } from "@/components/CompareBar";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Academi.kz — Твоя магистратура в Казахстане",
+  title: "Academik.kz — магистратура в Казахстане",
   description:
-    "Умный подбор программ магистратуры, модуль Болашак и чек-лист документов для поступления в университеты Казахстана.",
+    "Подбор программ магистратуры, гид по Болашак и чек-лист документов для поступления в университеты Казахстана.",
 };
 
 export default function RootLayout({

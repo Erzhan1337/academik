@@ -3,9 +3,27 @@
 import { useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
-import { Search, SlidersHorizontal, X, Award, ChevronDown } from "lucide-react";
+import { Search, SlidersHorizontal, X, Award } from "lucide-react";
 import { PROGRAMS, CITIES, LANGUAGES, FIELDS } from "@/lib/data";
 import { ProgramCard } from "@/components/ProgramCard";
+
+const ALL_CITIES = "Все города";
+const ALL_FIELDS = "Все направления";
+const MAX_COST = 3000;
+
+type SortBy = "cost-asc" | "cost-desc" | "deadline" | "rating";
+
+function formatProgramCount(count: number) {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+
+  if (lastDigit === 1 && lastTwoDigits !== 11) return `${count} программа найдена`;
+  if ([2, 3, 4].includes(lastDigit) && ![12, 13, 14].includes(lastTwoDigits)) {
+    return `${count} программы найдено`;
+  }
+
+  return `${count} программ найдено`;
+}
 
 function ProgramsContent() {
   const params = useSearchParams();
@@ -13,12 +31,12 @@ function ProgramsContent() {
   const initialBolashak = params.get("bolashak") === "true";
 
   const [query, setQuery] = useState(initialQ);
-  const [city, setCity] = useState("Все города");
-  const [field, setField] = useState("Все направления");
+  const [city, setCity] = useState(ALL_CITIES);
+  const [field, setField] = useState(ALL_FIELDS);
   const [langs, setLangs] = useState<string[]>([]);
   const [bolashak, setBolashak] = useState(initialBolashak);
-  const [maxCost, setMaxCost] = useState(3000);
-  const [sortBy, setSortBy] = useState<"cost-asc" | "cost-desc" | "deadline" | "rating">("rating");
+  const [maxCost, setMaxCost] = useState(MAX_COST);
+  const [sortBy, setSortBy] = useState<SortBy>("rating");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const toggleLang = (l: string) =>
@@ -26,28 +44,28 @@ function ProgramsContent() {
 
   const resetFilters = () => {
     setQuery("");
-    setCity("Все города");
-    setField("Все направления");
+    setCity(ALL_CITIES);
+    setField(ALL_FIELDS);
     setLangs([]);
     setBolashak(false);
-    setMaxCost(3000);
+    setMaxCost(MAX_COST);
     setSortBy("rating");
   };
 
   const filtered = useMemo(() => {
-    let result = PROGRAMS.filter((p) => {
+    const result = PROGRAMS.filter((p) => {
       if (query && !p.title.toLowerCase().includes(query.toLowerCase()) &&
           !p.university.toLowerCase().includes(query.toLowerCase()) &&
           !p.tags.some((t) => t.toLowerCase().includes(query.toLowerCase()))) return false;
-      if (city !== "Все города" && p.city !== city) return false;
-      if (field !== "Все направления" && p.field !== field) return false;
+      if (city !== ALL_CITIES && p.city !== city) return false;
+      if (field !== ALL_FIELDS && p.field !== field) return false;
       if (langs.length > 0 && !langs.some((l) => p.language.includes(l))) return false;
       if (bolashak && !p.bolashak) return false;
       if (p.cost > maxCost) return false;
       return true;
     });
 
-    return result.sort((a, b) => {
+    return [...result].sort((a, b) => {
       if (sortBy === "cost-asc") return a.cost - b.cost;
       if (sortBy === "cost-desc") return b.cost - a.cost;
       if (sortBy === "deadline") return a.deadline.localeCompare(b.deadline);
@@ -55,7 +73,40 @@ function ProgramsContent() {
     });
   }, [query, city, field, langs, bolashak, maxCost, sortBy]);
 
-  const hasFilters = city !== "Все города" || field !== "Все направления" || langs.length > 0 || bolashak || maxCost < 3000;
+  const activeFilters = useMemo(() => {
+    const filters: { key: string; label: string; onRemove: () => void }[] = [];
+
+    if (query.trim()) {
+      filters.push({ key: "query", label: `Поиск: ${query.trim()}`, onRemove: () => setQuery("") });
+    }
+    if (city !== ALL_CITIES) {
+      filters.push({ key: "city", label: city, onRemove: () => setCity(ALL_CITIES) });
+    }
+    if (field !== ALL_FIELDS) {
+      filters.push({ key: "field", label: field, onRemove: () => setField(ALL_FIELDS) });
+    }
+    langs.forEach((lang) => {
+      filters.push({
+        key: `lang-${lang}`,
+        label: lang,
+        onRemove: () => setLangs((prev) => prev.filter((item) => item !== lang)),
+      });
+    });
+    if (bolashak) {
+      filters.push({ key: "bolashak", label: "Только программы Болашак", onRemove: () => setBolashak(false) });
+    }
+    if (maxCost < MAX_COST) {
+      filters.push({
+        key: "maxCost",
+        label: `До ${maxCost.toLocaleString("ru")} 000 ₸`,
+        onRemove: () => setMaxCost(MAX_COST),
+      });
+    }
+
+    return filters;
+  }, [query, city, field, langs, bolashak, maxCost]);
+
+  const hasFilters = activeFilters.length > 0;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
@@ -75,7 +126,7 @@ function ProgramsContent() {
           transition={{ delay: 0.1 }}
           className="text-ink-500"
         >
-          {filtered.length} программ найдено
+          {formatProgramCount(filtered.length)}
         </motion.p>
       </div>
 
@@ -114,11 +165,41 @@ function ProgramsContent() {
           <option value="rating">По рейтингу</option>
           <option value="cost-asc">Дешевле сначала</option>
           <option value="cost-desc">Дороже сначала</option>
-          <option value="deadline">По дедлайну</option>
+          <option value="deadline">По сроку подачи</option>
         </select>
       </motion.div>
 
-      <div className="flex gap-6">
+      <AnimatePresence>
+        {activeFilters.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            className="mb-6 flex flex-wrap items-center gap-2"
+          >
+            {activeFilters.map((filter) => (
+              <button
+                key={filter.key}
+                type="button"
+                onClick={filter.onRemove}
+                className="inline-flex items-center gap-1.5 rounded-full border border-brand-100 bg-brand-50 px-3 py-1.5 text-xs font-medium text-brand-700 transition-colors hover:border-brand-200 hover:bg-brand-100 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-300"
+              >
+                {filter.label}
+                <X className="w-3 h-3" />
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="text-xs font-medium text-ink-500 hover:text-ink-900 dark:text-ink-400 dark:hover:text-white"
+            >
+              Сбросить все
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="flex flex-col gap-6 md:flex-row">
         {/* Sidebar filters — desktop */}
         <motion.aside
           initial={{ opacity: 0, x: -20 }}
@@ -179,7 +260,7 @@ function ProgramsContent() {
               >
                 <Search className="w-12 h-12 mx-auto mb-4 opacity-30" />
                 <p className="text-lg font-medium text-ink-500">Программы не найдены</p>
-                <p className="text-sm mt-1">Попробуй изменить фильтры</p>
+                <p className="text-sm mt-1">Попробуйте изменить или сбросить фильтры</p>
                 <button
                   onClick={resetFilters}
                   className="mt-4 text-sm text-brand-600 font-medium hover:underline"
@@ -207,13 +288,13 @@ function FilterPanel({
   langs: string[]; toggleLang: (l: string) => void;
   bolashak: boolean; setBolashak: (v: boolean) => void;
   maxCost: number; setMaxCost: (v: number) => void;
-  sortBy: string; setSortBy: (v: any) => void;
+  sortBy: SortBy; setSortBy: (v: SortBy) => void;
   onReset: () => void; hasFilters: boolean;
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-ink-200 p-5 sticky top-20">
+    <div className="bg-white dark:bg-ink-900 rounded-2xl border border-ink-200 dark:border-ink-800 p-5 sticky top-20">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="font-semibold text-ink-900 flex items-center gap-2">
+        <h3 className="font-semibold text-ink-900 dark:text-white flex items-center gap-2">
           <SlidersHorizontal className="w-4 h-4" />
           Фильтры
         </h3>
@@ -228,27 +309,31 @@ function FilterPanel({
       </div>
 
       {/* Bolashak toggle */}
-      <label className="flex items-center justify-between gap-2 mb-5 cursor-pointer">
-        <span className="flex items-center gap-2 text-sm font-medium text-ink-700">
+      <div className="flex items-center justify-between gap-2 mb-5">
+        <span className="flex items-center gap-2 text-sm font-medium text-ink-700 dark:text-ink-200">
           <Award className="w-3.5 h-3.5 text-gold-500" />
-          Только Болашак
+          Только программы Болашак
         </span>
-        <div
+        <button
+          type="button"
+          role="switch"
+          aria-checked={bolashak}
+          aria-label="Показывать только программы, подходящие для Болашак"
           onClick={() => setBolashak(!bolashak)}
-          className={`w-10 h-5.5 rounded-full relative transition-colors ${bolashak ? "bg-amber-500" : "bg-ink-200"}`}
+          className={`w-10 h-5.5 rounded-full relative transition-colors ${bolashak ? "bg-amber-500" : "bg-ink-200 dark:bg-ink-700"}`}
           style={{ height: "22px" }}
         >
           <div className={`absolute top-0.5 w-4 h-4 bg-white dark:bg-ink-950 rounded-full shadow transition-transform ${bolashak ? "translate-x-5" : "translate-x-0.5"}`} />
-        </div>
-      </label>
+        </button>
+      </div>
 
       {/* City */}
       <div className="mb-4">
-        <label className="block text-xs font-semibold text-ink-500 uppercase tracking-wider mb-2">Город</label>
+        <label className="block text-xs font-semibold text-ink-500 dark:text-ink-400 uppercase tracking-wider mb-2">Город</label>
         <select
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          className="w-full bg-ink-50 border border-ink-200 rounded-lg px-3 py-2 text-sm text-ink-800 focus:outline-none focus:ring-2 focus:ring-brand-500"
+          className="w-full bg-ink-50 dark:bg-ink-950 border border-ink-200 dark:border-ink-800 rounded-lg px-3 py-2 text-sm text-ink-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
         >
           {CITIES.map((c) => <option key={c}>{c}</option>)}
         </select>
@@ -256,11 +341,11 @@ function FilterPanel({
 
       {/* Field */}
       <div className="mb-4">
-        <label className="block text-xs font-semibold text-ink-500 uppercase tracking-wider mb-2">Направление</label>
+        <label className="block text-xs font-semibold text-ink-500 dark:text-ink-400 uppercase tracking-wider mb-2">Направление</label>
         <select
           value={field}
           onChange={(e) => setField(e.target.value)}
-          className="w-full bg-ink-50 border border-ink-200 rounded-lg px-3 py-2 text-sm text-ink-800 focus:outline-none focus:ring-2 focus:ring-brand-500"
+          className="w-full bg-ink-50 dark:bg-ink-950 border border-ink-200 dark:border-ink-800 rounded-lg px-3 py-2 text-sm text-ink-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
         >
           {FIELDS.map((f) => <option key={f}>{f}</option>)}
         </select>
@@ -268,7 +353,7 @@ function FilterPanel({
 
       {/* Language */}
       <div className="mb-4">
-        <label className="block text-xs font-semibold text-ink-500 uppercase tracking-wider mb-2">Язык обучения</label>
+        <label className="block text-xs font-semibold text-ink-500 dark:text-ink-400 uppercase tracking-wider mb-2">Язык обучения</label>
         <div className="flex flex-col gap-2">
           {LANGUAGES.map((l) => (
             <label key={l} className="flex items-center gap-2 cursor-pointer">
@@ -278,7 +363,7 @@ function FilterPanel({
                 onChange={() => toggleLang(l)}
                 className="w-4 h-4 rounded border-ink-300 text-brand-600 focus:ring-brand-500"
               />
-              <span className="text-sm text-ink-700">{l}</span>
+              <span className="text-sm text-ink-700 dark:text-ink-200">{l}</span>
             </label>
           ))}
         </div>
@@ -286,8 +371,8 @@ function FilterPanel({
 
       {/* Cost range */}
       <div className="mb-4">
-        <label className="block text-xs font-semibold text-ink-500 uppercase tracking-wider mb-2">
-          Стоимость до: <span className="text-ink-900 font-bold">{maxCost.toLocaleString("ru")} 000 ₸</span>
+        <label className="block text-xs font-semibold text-ink-500 dark:text-ink-400 uppercase tracking-wider mb-2">
+          Стоимость до: <span className="text-ink-900 dark:text-white font-bold">{maxCost.toLocaleString("ru")} 000 ₸</span>
         </label>
         <input
           type="range"
@@ -305,16 +390,16 @@ function FilterPanel({
 
       {/* Sort (mobile) */}
       <div className="md:hidden">
-        <label className="block text-xs font-semibold text-ink-500 uppercase tracking-wider mb-2">Сортировка</label>
+        <label className="block text-xs font-semibold text-ink-500 dark:text-ink-400 uppercase tracking-wider mb-2">Сортировка</label>
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="w-full bg-ink-50 border border-ink-200 rounded-lg px-3 py-2 text-sm text-ink-800 focus:outline-none"
+          onChange={(e) => setSortBy(e.target.value as SortBy)}
+          className="w-full bg-ink-50 dark:bg-ink-950 border border-ink-200 dark:border-ink-800 rounded-lg px-3 py-2 text-sm text-ink-800 dark:text-white focus:outline-none"
         >
           <option value="rating">По рейтингу</option>
           <option value="cost-asc">Дешевле сначала</option>
           <option value="cost-desc">Дороже сначала</option>
-          <option value="deadline">По дедлайну</option>
+          <option value="deadline">По сроку подачи</option>
         </select>
       </div>
     </div>

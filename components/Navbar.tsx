@@ -84,16 +84,16 @@ export function Navbar() {
               })}
             </nav>
 
-            {/* Auth + Theme */}
+            {/* Quick action + Theme */}
             <div className="hidden md:flex items-center gap-2">
               <ThemeToggle />
               <div className="w-px h-5 bg-ink-200 dark:bg-ink-800 mx-1" />
-              <button className="text-sm font-medium text-ink-600 dark:text-ink-300 hover:text-ink-900 dark:hover:text-white px-3 py-2 rounded-lg transition-colors">
-                Войти
-              </button>
-              <button className="text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-lg transition-colors shadow-sm">
-                Регистрация
-              </button>
+              <Link
+                href="/checklist"
+                className="text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-lg transition-colors shadow-sm"
+              >
+                Чек-лист
+              </Link>
             </div>
 
             {/* Mobile hamburger */}
@@ -141,13 +141,13 @@ export function Navbar() {
                   </Link>
                 </motion.div>
               ))}
-              <div className="mt-3 pt-3 border-t border-ink-100 dark:border-ink-800 flex gap-2">
-                <button className="flex-1 py-2.5 text-sm font-medium text-ink-700 dark:text-ink-300 border border-ink-200 dark:border-ink-700 rounded-lg">
-                  Войти
-                </button>
-                <button className="flex-1 py-2.5 text-sm font-semibold text-white bg-brand-600 rounded-lg">
-                  Регистрация
-                </button>
+              <div className="mt-3 pt-3 border-t border-ink-100 dark:border-ink-800">
+                <Link
+                  href="/programs"
+                  className="flex w-full items-center justify-center py-2.5 text-sm font-semibold text-white bg-brand-600 rounded-lg"
+                >
+                  Найти программу
+                </Link>
               </div>
             </nav>
           </motion.div>

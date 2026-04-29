@@ -72,7 +72,7 @@ export function ProgramCard({ program, index = 0 }: { program: Program; index?: 
           <div className="flex items-center justify-between pt-4 border-t border-ink-100 dark:border-ink-800">
             <div>
               <div className="text-base font-bold text-ink-900 dark:text-white">{program.costLabel}</div>
-              <div className="text-xs text-ink-400 dark:text-ink-500">Дедлайн: {program.deadlineLabel}</div>
+              <div className="text-xs text-ink-400 dark:text-ink-500">Срок подачи: {program.deadlineLabel}</div>
             </div>
             <motion.div
               role="button"
