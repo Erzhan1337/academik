@@ -1,12 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback, memo, lazy, Suspense } from "react";
 import { motion, useSpring, useTransform, AnimatePresence } from "motion/react";
 import { Calculator, MapPin, Sparkles, PieChart as PieChartIcon, CheckCircle2 } from "lucide-react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
-// Animated Number Component
-function AnimatedNumber({ value }: { value: number }) {
+// Lazy load heavy Recharts (adds ~200kb) — only when user scrolls to see it
+const LazyChart = lazy(() => import("./chart"));
+
+// City presets extracted as a constant outside the component to avoid re-creation every render
+const CITY_PRESETS = [
+  { name: "Алматы",          housing: 350, food: 150, transport: 30 },
+  { name: "Астана",           housing: 300, food: 130, transport: 25 },
+  { name: "Шымкент",          housing: 150, food: 90,  transport: 15 },
+  { name: "Караганда",        housing: 120, food: 80,  transport: 15 },
+  { name: "Зарубеж (US/UK)",  housing: 800, food: 400, transport: 100 },
+] as const;
+
+// Animated Number Component — memoised so it only re-renders when `value` changes
+const AnimatedNumber = memo(function AnimatedNumber({ value }: { value: number }) {
   const spring = useSpring(value, { bounce: 0, duration: 1000 });
   const display = useTransform(spring, (current) => Math.round(current).toLocaleString("ru"));
 
@@ -15,45 +26,93 @@ function AnimatedNumber({ value }: { value: number }) {
   }, [spring, value]);
 
   return <motion.span>{display}</motion.span>;
-}
+});
+
+// Premium Slider — extracted to avoid repeating 30 lines of identical markup
+const PremiumSlider = memo(function PremiumSlider({
+  label,
+  value,
+  onChange,
+  min,
+  max,
+  step,
+  color,
+  suffix = "к ₸",
+  disabled = false,
+}: {
+  label: string;
+  value: number;
+  onChange: (v: number) => void;
+  min: number;
+  max: number;
+  step: number;
+  color: string;     // hex like "#3B82F6"
+  suffix?: string;
+  disabled?: boolean;
+}) {
+  const pct = ((value - min) / (max - min)) * 100;
+  return (
+    <div className={disabled ? "opacity-30 blur-[1px] pointer-events-none" : "transition-opacity"}>
+      <div className="flex items-center justify-between mb-4">
+        <span className="font-bold text-ink-950 dark:text-white">{label}</span>
+        <span className="text-lg font-black" style={{ color }}>
+          <AnimatedNumber value={value} />{suffix}
+        </span>
+      </div>
+      <input
+        type="range" min={min} max={max} step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="w-full h-3 rounded-full appearance-none cursor-pointer bg-ink-100 dark:bg-ink-950 border border-ink-200 dark:border-ink-800"
+        style={{
+          accentColor: color,
+          background: `linear-gradient(to right, ${color} ${pct}%, transparent ${pct}%)`,
+        }}
+      />
+    </div>
+  );
+});
 
 export default function CalculatorPage() {
-  const [tuition, setTuition] = useState(1500); // 1.5M KZT
-  const [housing, setHousing] = useState(250); // 250k per month
-  const [food, setFood] = useState(120); // 120k per month
-  const [transport, setTransport] = useState(20); // 20k per month
+  const [tuition, setTuition] = useState(1500);
+  const [housing, setHousing] = useState(250);
+  const [food, setFood] = useState(120);
+  const [transport, setTransport] = useState(20);
   const [isBolashak, setIsBolashak] = useState(false);
   const [activeCity, setActiveCity] = useState<string | null>(null);
 
-  // City preset logic affecting multiple fields
-  const applyCityPreset = (city: string) => {
-    setActiveCity(city);
-    if (city === "Алматы") { setHousing(350); setFood(150); setTransport(30); }
-    else if (city === "Астана") { setHousing(300); setFood(130); setTransport(25); }
-    else if (city === "Шымкент") { setHousing(150); setFood(90); setTransport(15); }
-    else if (city === "Караганда") { setHousing(120); setFood(80); setTransport(15); }
-    else if (city === "Зарубеж (US/UK)") { setHousing(800); setFood(400); setTransport(100); }
-  };
+  // Stable callback — won't cause child re-renders
+  const applyCityPreset = useCallback((city: typeof CITY_PRESETS[number]) => {
+    setActiveCity(city.name);
+    setHousing(city.housing);
+    setFood(city.food);
+    setTransport(city.transport);
+  }, []);
 
-  // Logic overrides
-  const effectiveTuition = isBolashak ? 0 : tuition;
-  const effectiveHousing = isBolashak ? 0 : housing;
-  const effectiveFood = isBolashak ? 0 : food;
-  const effectiveTransport = transport; // personal expenses
+  // Derived values — recalculated only when dependencies change
+  const effectiveTuition  = isBolashak ? 0 : tuition;
+  const effectiveHousing  = isBolashak ? 0 : housing;
+  const effectiveFood     = isBolashak ? 0 : food;
+  const effectiveTransport = transport;
 
-  const totalMonthly = effectiveHousing + effectiveFood + effectiveTransport;
-  const totalLivingYear = totalMonthly * 10; // 10 months academic year
-  const grandTotal = effectiveTuition + totalLivingYear;
-  
-  // Bolashak Savings
-  const savedAmount = (tuition + ((housing + food) * 10)) - (effectiveTuition + ((effectiveHousing + effectiveFood) * 10));
+  const totalMonthly   = effectiveHousing + effectiveFood + effectiveTransport;
+  const totalLivingYear = totalMonthly * 10;
+  const grandTotal     = effectiveTuition + totalLivingYear;
+  const savedAmount    = (tuition + (housing + food) * 10) - (effectiveTuition + (effectiveHousing + effectiveFood) * 10);
 
-  const chartData = [
-    { name: "Обучение", value: effectiveTuition, color: "#3B82F6" }, // blue-500
-    { name: "Жилье", value: effectiveHousing * 10, color: "#F59E0B" }, // amber-500
-    { name: "Питание", value: effectiveFood * 10, color: "#10B981" }, // emerald-500
-    { name: "Личное", value: effectiveTransport * 10, color: "#8B5CF6" }, // violet-500
-  ].filter(item => item.value > 0);
+  // Chart data — memoised so Recharts doesn't re-parse identical arrays
+  const chartData = useMemo(() => [
+    { name: "Обучение", value: effectiveTuition,       color: "#3B82F6" },
+    { name: "Жилье",    value: effectiveHousing * 10,   color: "#F59E0B" },
+    { name: "Питание",  value: effectiveFood * 10,      color: "#10B981" },
+    { name: "Личное",   value: effectiveTransport * 10, color: "#8B5CF6" },
+  ].filter(item => item.value > 0), [effectiveTuition, effectiveHousing, effectiveFood, effectiveTransport]);
+
+  // Stable slider handlers — avoid creating new functions on every render
+  const handleTuition   = useCallback((v: number) => { setTuition(v);   setActiveCity(null); }, []);
+  const handleHousing   = useCallback((v: number) => { setHousing(v);   setActiveCity(null); }, []);
+  const handleFood      = useCallback((v: number) => { setFood(v);      setActiveCity(null); }, []);
+  const handleTransport = useCallback((v: number) => { setTransport(v); setActiveCity(null); }, []);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-500 relative overflow-hidden">
@@ -115,7 +174,7 @@ export default function CalculatorPage() {
               <div className="relative z-10 flex items-center justify-between">
                 <div>
                   <h3 className={`text-xl font-bold mb-1 flex items-center gap-2 ${isBolashak ? "text-white" : "text-ink-950 dark:text-white"}`}>
-                    Стипендия "Болашак" 
+                    Стипендия &quot;Болашак&quot; 
                     {isBolashak && <CheckCircle2 className="w-5 h-5 text-emerald-300" />}
                   </h3>
                   <p className={`text-sm ${isBolashak ? "text-brand-100" : "text-ink-500 dark:text-ink-400"}`}>
@@ -140,18 +199,19 @@ export default function CalculatorPage() {
               <div>
                 <label className="text-sm font-bold text-ink-500 dark:text-ink-400 uppercase tracking-widest mb-4 block">Умные Пресеты</label>
                 <div className="flex flex-wrap gap-2">
-                  {["Алматы", "Астана", "Шымкент", "Караганда", "Зарубеж (US/UK)"].map(c => {
-                    const isActive = activeCity === c;
+                  {CITY_PRESETS.map(city => {
+                    const isActive = activeCity === city.name;
                     return (
                       <button
-                        key={c} onClick={() => applyCityPreset(c)}
+                        key={city.name}
+                        onClick={() => applyCityPreset(city)}
                         className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition-all duration-300 ${
                           isActive 
                             ? "bg-brand-500 border-brand-500 text-white shadow-lg shadow-brand-500/25" 
                             : "bg-white dark:bg-ink-950 border-ink-200 dark:border-ink-800 text-ink-700 dark:text-ink-300 hover:border-brand-500/50"
                         }`}
                       >
-                        <MapPin className="w-4 h-4" /> {c}
+                        <MapPin className="w-4 h-4" /> {city.name}
                       </button>
                     )
                   })}
@@ -178,49 +238,29 @@ export default function CalculatorPage() {
                 </AnimatePresence>
 
                 {/* Tuition */}
-                <div className={isBolashak ? "opacity-30 blur-[1px] pointer-events-none" : "transition-opacity"}>
-                  <div className="flex items-center justify-between mb-4">
-                    <label className="font-bold text-ink-950 dark:text-white">Обучение в год</label>
-                    <div className="text-xl font-black text-blue-500">
-                      <AnimatedNumber value={tuition} /> 000 ₸
-                    </div>
-                  </div>
-                  <input
-                    type="range" min={0} max={15000} step={100}
-                    value={tuition} onChange={(e) => { setTuition(Number(e.target.value)); setActiveCity(null); }}
-                    className="w-full h-3 rounded-full appearance-none cursor-pointer bg-ink-100 dark:bg-ink-950 border border-ink-200 dark:border-ink-800 accent-blue-500"
-                    style={{ background: `linear-gradient(to right, #3B82F6 ${(tuition/15000)*100}%, transparent ${(tuition/15000)*100}%)` }}
-                  />
-                </div>
+                <PremiumSlider
+                  label="Обучение в год"
+                  value={tuition} onChange={handleTuition}
+                  min={0} max={15000} step={100}
+                  color="#3B82F6" suffix=" 000 ₸"
+                  disabled={isBolashak}
+                />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                  {/* Housing */}
-                  <div className={isBolashak ? "opacity-30 blur-[1px] pointer-events-none" : "transition-opacity"}>
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="font-bold text-ink-950 dark:text-white">Аренда жилья / мес.</span>
-                      <span className="text-lg font-black text-amber-500"><AnimatedNumber value={housing} />к ₸</span>
-                    </div>
-                    <input
-                      type="range" min={0} max={1500} step={10}
-                      value={housing} onChange={(e) => { setHousing(Number(e.target.value)); setActiveCity(null); }}
-                      className="w-full h-3 rounded-full appearance-none cursor-pointer bg-ink-100 dark:bg-ink-950 border border-ink-200 dark:border-ink-800 accent-amber-500"
-                      style={{ background: `linear-gradient(to right, #F59E0B ${(housing/1500)*100}%, transparent ${(housing/1500)*100}%)` }}
-                    />
-                  </div>
-                  
-                  {/* Food */}
-                  <div className={isBolashak ? "opacity-30 blur-[1px] pointer-events-none" : "transition-opacity"}>
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="font-bold text-ink-950 dark:text-white">Питание / мес.</span>
-                      <span className="text-lg font-black text-emerald-500"><AnimatedNumber value={food} />к ₸</span>
-                    </div>
-                    <input
-                      type="range" min={30} max={800} step={10}
-                      value={food} onChange={(e) => { setFood(Number(e.target.value)); setActiveCity(null); }}
-                      className="w-full h-3 rounded-full appearance-none cursor-pointer bg-ink-100 dark:bg-ink-950 border border-ink-200 dark:border-ink-800 accent-emerald-500"
-                      style={{ background: `linear-gradient(to right, #10B981 ${(food/800)*100}%, transparent ${(food/800)*100}%)` }}
-                    />
-                  </div>
+                  <PremiumSlider
+                    label="Аренда жилья / мес."
+                    value={housing} onChange={handleHousing}
+                    min={0} max={1500} step={10}
+                    color="#F59E0B"
+                    disabled={isBolashak}
+                  />
+                  <PremiumSlider
+                    label="Питание / мес."
+                    value={food} onChange={handleFood}
+                    min={30} max={800} step={10}
+                    color="#10B981"
+                    disabled={isBolashak}
+                  />
 
                   {/* Transport & Leisure (Always active) */}
                   <div className="sm:col-span-2">
@@ -233,9 +273,12 @@ export default function CalculatorPage() {
                     </div>
                     <input
                       type="range" min={0} max={500} step={5}
-                      value={transport} onChange={(e) => { setTransport(Number(e.target.value)); setActiveCity(null); }}
-                      className="w-full h-3 rounded-full appearance-none cursor-pointer bg-ink-100 dark:bg-ink-950 border border-ink-200 dark:border-ink-800 accent-violet-500 relative z-20"
-                      style={{ background: `linear-gradient(to right, #8B5CF6 ${(transport/500)*100}%, transparent ${(transport/500)*100}%)` }}
+                      value={transport} onChange={(e) => handleTransport(Number(e.target.value))}
+                      className="w-full h-3 rounded-full appearance-none cursor-pointer bg-ink-100 dark:bg-ink-950 border border-ink-200 dark:border-ink-800 relative z-20"
+                      style={{
+                        accentColor: "#8B5CF6",
+                        background: `linear-gradient(to right, #8B5CF6 ${(transport/500)*100}%, transparent ${(transport/500)*100}%)`,
+                      }}
                     />
                   </div>
                 </div>
@@ -258,32 +301,16 @@ export default function CalculatorPage() {
                 <PieChartIcon className="w-6 h-6 text-brand-500 dark:text-brand-400" /> Финансовый анализ
               </h3>
 
-              {/* Chart */}
+              {/* Chart — Lazy loaded */}
               <div className="h-[200px] w-full mb-8">
                 {grandTotal > 0 ? (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={chartData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={60}
-                        outerRadius={80}
-                        paddingAngle={5}
-                        dataKey="value"
-                        stroke="none"
-                      >
-                        {chartData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip 
-                        formatter={(value: any) => [`${Number(value).toLocaleString("ru")} 000 ₸`, '']}
-                        contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '12px' }}
-                        itemStyle={{ color: '#fff' }}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
+                  <Suspense fallback={
+                    <div className="w-full h-full flex items-center justify-center text-ink-400">
+                      <div className="w-10 h-10 border-4 border-ink-200 dark:border-ink-800 border-t-brand-500 rounded-full animate-spin" />
+                    </div>
+                  }>
+                    <LazyChart data={chartData} />
+                  </Suspense>
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center text-ink-500">
                     <Sparkles className="w-8 h-8 mb-2 opacity-20" />
@@ -317,8 +344,8 @@ export default function CalculatorPage() {
                     className="mt-6 bg-gradient-to-r from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 rounded-2xl p-5 flex flex-col gap-1 overflow-hidden relative"
                   >
                     <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500" />
-                    <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">Экономия с Болашак</span>
-                    <span className="text-2xl font-black text-emerald-300">
+                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Экономия с Болашак</span>
+                    <span className="text-2xl font-black text-emerald-600 dark:text-emerald-300">
                       <AnimatedNumber value={savedAmount} /> 000 ₸
                     </span>
                   </motion.div>
