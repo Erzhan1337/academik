@@ -17,6 +17,7 @@ export type Program = {
   rating: number;
   students: number;
   field: string;
+  matchPercentage?: number;
 };
 
 export const PROGRAMS: Program[] = [
@@ -55,6 +56,7 @@ export const PROGRAMS: Program[] = [
     rating: 4.8,
     students: 1200,
     field: "Бизнес",
+    matchPercentage: 98,
   },
   {
     id: "2",
@@ -90,6 +92,7 @@ export const PROGRAMS: Program[] = [
     rating: 4.9,
     students: 850,
     field: "IT",
+    matchPercentage: 95,
   },
   {
     id: "3",
@@ -123,6 +126,7 @@ export const PROGRAMS: Program[] = [
     rating: 4.5,
     students: 3200,
     field: "Право",
+    matchPercentage: 82,
   },
   {
     id: "4",
@@ -157,6 +161,7 @@ export const PROGRAMS: Program[] = [
     rating: 4.7,
     students: 1800,
     field: "Финансы",
+    matchPercentage: 91,
   },
   {
     id: "5",
@@ -188,6 +193,7 @@ export const PROGRAMS: Program[] = [
     rating: 4.3,
     students: 2400,
     field: "Педагогика",
+    matchPercentage: 75,
   },
   {
     id: "6",
@@ -221,6 +227,7 @@ export const PROGRAMS: Program[] = [
     rating: 4.6,
     students: 600,
     field: "Инженерия",
+    matchPercentage: 88,
   },
 ];
 

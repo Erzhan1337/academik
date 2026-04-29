@@ -57,9 +57,16 @@ export function ProgramCard({ program, index = 0 }: { program: Program; index?: 
               </h3>
             </div>
 
-            <div className="inline-flex shrink-0 items-center gap-1 rounded-md bg-ink-100 px-2 py-1 text-sm font-semibold text-ink-900 dark:bg-ink-800 dark:text-white">
-              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-              <span>{program.rating}</span>
+            <div className="flex shrink-0 items-center gap-2">
+              {program.matchPercentage && (
+                <div className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-1 text-[11px] font-bold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-500/20">
+                  <span>{program.matchPercentage}% совпадение</span>
+                </div>
+              )}
+              <div className="inline-flex items-center gap-1 rounded-md bg-ink-100 px-2 py-1 text-sm font-semibold text-ink-900 dark:bg-ink-800 dark:text-white">
+                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                <span>{program.rating}</span>
+              </div>
             </div>
           </div>
 
