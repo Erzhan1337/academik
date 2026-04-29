@@ -520,9 +520,9 @@ function NextActionCard({
 }) {
   const Icon = action.icon;
   const toneClass = {
-    blue: "from-brand-600 to-sky-500 shadow-brand-600/20",
-    amber: "from-amber-500 to-orange-500 shadow-amber-500/20",
-    green: "from-emerald-600 to-teal-500 shadow-emerald-600/20",
+    blue: "from-brand-600 to-sky-500 dark:from-ink-900 dark:via-slate-900 dark:to-emerald-950 dark:ring-1 dark:ring-emerald-500/20",
+    amber: "from-amber-500 to-orange-500 dark:from-ink-900 dark:via-stone-900 dark:to-amber-950 dark:ring-1 dark:ring-amber-500/20",
+    green: "from-emerald-600 to-teal-500 dark:from-ink-900 dark:via-slate-900 dark:to-teal-950 dark:ring-1 dark:ring-teal-500/20",
   }[action.tone];
 
   return (
@@ -723,7 +723,7 @@ function ToggleRow({
         onClick={onClick}
         className={`relative h-6 w-11 rounded-full transition-colors ${enabled ? active : "bg-ink-300 dark:bg-ink-800"}`}
       >
-        <span className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow transition-transform ${enabled ? "translate-x-6" : "translate-x-1"}`} />
+        <span className={`absolute left-1 top-1 h-4 w-4 rounded-full bg-white shadow transition-transform ${enabled ? "translate-x-5" : "translate-x-0"}`} />
       </button>
     </div>
   );
