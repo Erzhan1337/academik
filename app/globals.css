@@ -52,7 +52,16 @@ body {
 *:focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
-  border-radius: 4px;
+}
+
+input:focus, 
+select:focus, 
+textarea:focus, 
+input:focus-visible, 
+select:focus-visible, 
+textarea:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Selection */
