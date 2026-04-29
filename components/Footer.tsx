@@ -19,30 +19,30 @@ const LINKS = {
 
 export function Footer() {
   return (
-    <footer className="bg-ink-900 text-white mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+    <footer className="mt-20 border-t border-ink-200 bg-white text-ink-900 transition-colors dark:border-ink-800 dark:bg-ink-950 dark:text-white">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
           {/* Brand */}
           <div className="md:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="mb-4 flex items-center gap-2">
               <Image
                 src="/logo.svg"
                 alt="Academik"
                 width={201}
                 height={48}
-                className="h-12 w-auto object-contain"
+                className="h-12 w-auto object-contain dark:brightness-0 dark:invert"
               />
             </div>
-            <p className="text-ink-400 text-sm leading-relaxed mb-6">
+            <p className="mb-6 text-sm leading-relaxed text-ink-600 dark:text-ink-400">
               Платформа для выбора магистратуры и подготовки к поступлению в Казахстане.
             </p>
-            <div className="flex flex-col gap-2 text-sm text-ink-400">
-              <a href="mailto:hello@academik.kz" className="flex items-center gap-2 hover:text-white transition-colors">
-                <Mail className="w-3.5 h-3.5" />
+            <div className="flex flex-col gap-2 text-sm text-ink-600 dark:text-ink-400">
+              <a href="mailto:hello@academik.kz" className="flex items-center gap-2 transition-colors hover:text-brand-600 dark:hover:text-white">
+                <Mail className="h-3.5 w-3.5" />
                 hello@academik.kz
               </a>
               <span className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5" />
+                <MapPin className="h-3.5 w-3.5" />
                 Алматы, Казахстан
               </span>
             </div>
@@ -50,11 +50,11 @@ export function Footer() {
 
           {/* Platform */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-4 uppercase tracking-wider">Платформа</h4>
+            <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-ink-950 dark:text-white">Платформа</h4>
             <ul className="flex flex-col gap-3">
               {LINKS.platform.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-sm text-ink-400 hover:text-white transition-colors">
+                  <Link href={l.href} className="text-sm text-ink-600 transition-colors hover:text-brand-600 dark:text-ink-400 dark:hover:text-white">
                     {l.label}
                   </Link>
                 </li>
@@ -64,11 +64,11 @@ export function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-4 uppercase tracking-wider">Поддержка</h4>
+            <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-ink-950 dark:text-white">Поддержка</h4>
             <ul className="flex flex-col gap-3">
               {LINKS.support.map((l) => (
                 <li key={l.label}>
-                  <Link href={l.href} className="text-sm text-ink-400 hover:text-white transition-colors">
+                  <Link href={l.href} className="text-sm text-ink-600 transition-colors hover:text-brand-600 dark:text-ink-400 dark:hover:text-white">
                     {l.label}
                   </Link>
                 </li>
@@ -78,30 +78,30 @@ export function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-4 uppercase tracking-wider">Сроки на почту</h4>
-            <p className="text-sm text-ink-400 mb-4">
+            <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-ink-950 dark:text-white">Сроки на почту</h4>
+            <p className="mb-4 text-sm text-ink-600 dark:text-ink-400">
               Получайте напоминания о сроках подачи и полезные советы по поступлению.
             </p>
             <div className="flex gap-2">
               <input
                 type="email"
                 placeholder="email@example.com"
-                className="flex-1 bg-ink-800 text-white text-sm px-3 py-2.5 rounded-lg border border-ink-700 focus:outline-none focus:border-brand-500 placeholder:text-ink-500"
+                className="min-w-0 flex-1 rounded-lg border border-ink-200 bg-ink-50 px-3 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 transition-colors focus:border-brand-500 focus:outline-none dark:border-ink-800 dark:bg-ink-900 dark:text-white dark:placeholder:text-ink-500"
               />
-              <button className="bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors whitespace-nowrap">
+              <button className="whitespace-nowrap rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-700 dark:hover:bg-brand-500">
                 →
               </button>
             </div>
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-ink-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-ink-500">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-ink-200 pt-6 dark:border-ink-800 sm:flex-row">
+          <p className="text-xs text-ink-500 dark:text-ink-500">
             © 2025 Academik.kz. Все права защищены.
           </p>
-          <div className="flex gap-4 text-xs text-ink-500">
-            <a href="#" className="hover:text-white transition-colors">Политика конфиденциальности</a>
-            <a href="#" className="hover:text-white transition-colors">Условия использования</a>
+          <div className="flex gap-4 text-xs text-ink-500 dark:text-ink-500">
+            <a href="#" className="transition-colors hover:text-brand-600 dark:hover:text-white">Политика конфиденциальности</a>
+            <a href="#" className="transition-colors hover:text-brand-600 dark:hover:text-white">Условия использования</a>
           </div>
         </div>
       </div>

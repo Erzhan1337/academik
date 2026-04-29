@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, ChevronRight, User, LogOut } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { ChevronRight, LogOut, Menu, User, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { useAuthStore } from "@/lib/auth-store";
 
@@ -23,16 +23,34 @@ export function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const scrolledRef = useRef(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const { user, logout } = useAuthStore();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
+    const onScroll = () => {
+      const nextScrolled = window.scrollY > 20;
+      if (scrolledRef.current === nextScrolled) return;
+
+      scrolledRef.current = nextScrolled;
+      setScrolled(nextScrolled);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    setOpen(false);
+    setProfileOpen(false);
+  }, [pathname]);
+
+  const handleLogout = () => {
+    logout();
+    setOpen(false);
+    setProfileOpen(false);
+  };
 
   return (
     <>
@@ -42,12 +60,12 @@ export function Navbar() {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-white/95 dark:bg-ink-950/95 backdrop-blur-md shadow-[0_1px_0_0_#e2e8f0] dark:shadow-[0_1px_0_0_#1e293b]"
+            ? "bg-white shadow-sm dark:bg-ink-950 dark:shadow-none"
             : "bg-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
               <Image
@@ -68,7 +86,7 @@ export function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                    className={`relative rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                       active
                         ? "text-brand-600 bg-brand-50 dark:bg-brand-500/10 dark:text-brand-400"
                         : "text-ink-600 dark:text-ink-400 hover:text-ink-900 dark:hover:text-white hover:bg-ink-100 dark:hover:bg-ink-800"
@@ -77,7 +95,7 @@ export function Navbar() {
                     {active && (
                       <motion.span
                         layoutId="nav-pill"
-                        className="absolute inset-0 bg-brand-50 dark:bg-brand-500/10 rounded-lg"
+                        className="absolute inset-0 rounded-lg bg-brand-50 dark:bg-brand-500/10"
                         transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
                       />
                     )}
@@ -90,17 +108,18 @@ export function Navbar() {
             {/* Quick action + Theme */}
             <div className="hidden md:flex items-center gap-2">
               <ThemeToggle />
-              <div className="w-px h-5 bg-ink-200 dark:bg-ink-800 mx-1" />
+              <div className="mx-1 h-5 w-px bg-ink-200 dark:bg-ink-800" />
               {user ? (
                 <div className="relative">
                   <button
-                    onClick={() => setProfileOpen(!profileOpen)}
-                    className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl hover:bg-ink-100 dark:hover:bg-ink-800 transition-colors"
+                    type="button"
+                    onClick={() => setProfileOpen((value) => !value)}
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-1.5 transition-colors hover:bg-ink-100 dark:hover:bg-ink-800"
                   >
-                    <div className="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-white text-xs font-bold">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white">
                       {user.avatar}
                     </div>
-                    <span className="text-sm font-medium text-ink-700 dark:text-ink-200 max-w-[120px] truncate">{user.name}</span>
+                    <span className="max-w-[120px] truncate text-sm font-medium text-ink-700 dark:text-ink-200">{user.name}</span>
                   </button>
                   <AnimatePresence>
                     {profileOpen && (
@@ -109,23 +128,26 @@ export function Navbar() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 4, scale: 0.95 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl shadow-xl p-2"
+                        className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-ink-200 bg-white p-2 shadow-xl dark:border-ink-800 dark:bg-ink-900"
                       >
-                        <div className="px-3 py-2 mb-1">
+                        <div className="mb-1 px-3 py-2">
                           <p className="text-sm font-semibold text-ink-900 dark:text-white">{user.name}</p>
                           <p className="text-xs text-ink-500 dark:text-ink-400">{user.email}</p>
-                          <span className={`inline-block mt-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                            user.plan === "pro" ? "bg-brand-100 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300" : "bg-ink-100 text-ink-600 dark:bg-ink-800 dark:text-ink-400"
-                          }`}>
-                            {user.plan.toUpperCase()}
-                          </span>
                         </div>
-                        <div className="h-px bg-ink-100 dark:bg-ink-800 my-1" />
-                        <button
-                          onClick={() => { logout(); setProfileOpen(false); }}
-                          className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors font-medium"
+                        <div className="my-1 h-px bg-ink-100 dark:bg-ink-800" />
+                        <Link
+                          href="/profile"
+                          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-ink-700 transition-colors hover:bg-ink-50 dark:text-ink-200 dark:hover:bg-ink-800"
                         >
-                          <LogOut className="w-4 h-4" />
+                          <User className="h-4 w-4" />
+                          Профиль
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={handleLogout}
+                          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10"
+                        >
+                          <LogOut className="h-4 w-4" />
                           Выйти
                         </button>
                       </motion.div>
@@ -135,22 +157,23 @@ export function Navbar() {
               ) : (
                 <Link
                   href="/auth"
-                  className="flex items-center gap-2 text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-lg transition-colors shadow-sm"
+                  className="flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700"
                 >
-                  <User className="w-4 h-4" />
+                  <User className="h-4 w-4" />
                   Войти
                 </Link>
               )}
             </div>
 
             {/* Mobile hamburger */}
-            <div className="md:hidden flex items-center gap-2">
+            <div className="flex items-center gap-2 md:hidden">
               <ThemeToggle />
               <button
-                onClick={() => setOpen(!open)}
-                className="p-2 rounded-lg text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800 transition-colors"
+                type="button"
+                onClick={() => setOpen((value) => !value)}
+                className="rounded-lg p-2 text-ink-600 transition-colors hover:bg-ink-100 dark:text-ink-300 dark:hover:bg-ink-800"
               >
-                {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
             </div>
           </div>
@@ -165,37 +188,66 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-16 left-0 right-0 z-40 bg-white dark:bg-ink-950 border-b border-ink-200 dark:border-ink-800 shadow-xl md:hidden"
+            className="fixed left-0 right-0 top-16 z-40 border-b border-ink-200 bg-white shadow-xl dark:border-ink-800 dark:bg-ink-950 md:hidden"
           >
-            <nav className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
-              {NAV_LINKS.map((link, i) => (
+            <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
+              {NAV_LINKS.map((link, index) => (
                 <motion.div
                   key={link.href}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
+                  transition={{ delay: index * 0.05 }}
                 >
                   <Link
                     href={link.href}
-                    className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center justify-between rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
                       pathname.startsWith(link.href)
                         ? "text-brand-600 bg-brand-50 dark:bg-brand-500/10 dark:text-brand-400"
                         : "text-ink-700 dark:text-ink-300 hover:bg-ink-50 dark:hover:bg-ink-800/50"
                     }`}
                   >
                     {link.label}
-                    <ChevronRight className="w-4 h-4 opacity-40" />
+                    <ChevronRight className="h-4 w-4 opacity-40" />
                   </Link>
                 </motion.div>
               ))}
-              <div className="mt-3 pt-3 border-t border-ink-100 dark:border-ink-800">
-                <Link
-                  href="/auth"
-                  className="flex w-full items-center justify-center gap-2 py-2.5 text-sm font-semibold text-white bg-brand-600 rounded-lg"
-                >
-                  <User className="w-4 h-4" />
-                  Войти
-                </Link>
+              <div className="mt-3 border-t border-ink-100 pt-3 dark:border-ink-800">
+                {user ? (
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-3 rounded-xl bg-ink-50 px-3 py-3 dark:bg-ink-900">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white">
+                        {user.avatar}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-ink-900 dark:text-white">{user.name}</p>
+                        <p className="truncate text-xs text-ink-500 dark:text-ink-400">{user.email}</p>
+                      </div>
+                    </div>
+                    <Link
+                      href="/profile"
+                      className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 py-2.5 text-sm font-semibold text-white"
+                    >
+                      <User className="h-4 w-4" />
+                      Профиль
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="flex w-full items-center justify-center gap-2 rounded-lg bg-red-50 py-2.5 text-sm font-semibold text-red-600 dark:bg-red-500/10 dark:text-red-400"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Выйти
+                    </button>
+                  </div>
+                ) : (
+                  <Link
+                    href="/auth"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 py-2.5 text-sm font-semibold text-white"
+                  >
+                    <User className="h-4 w-4" />
+                    Войти
+                  </Link>
+                )}
               </div>
             </nav>
           </motion.div>
