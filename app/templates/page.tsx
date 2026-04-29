@@ -109,11 +109,11 @@ ${formData.name}`;
       // Dynamically import to avoid SSR errors
       const html2pdf = (await import("html2pdf.js")).default;
       const opt = {
-        margin:       [0.75, 0.75, 0.75, 0.75],
+        margin:       0.75,
         filename:     `${activeTab}_document.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
+        image:        { type: 'jpeg' as const, quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true },
-        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+        jsPDF:        { unit: 'in' as const, format: 'a4', orientation: 'portrait' as const }
       };
       html2pdf().set(opt).from(printRef.current).save();
     } catch (error) {

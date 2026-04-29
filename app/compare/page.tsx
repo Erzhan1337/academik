@@ -151,7 +151,6 @@ export default function ComparePage() {
                 <AnimatePresence>
                   {visibleRows.map((row, ri) => {
                     const diff = isDifferent(row.key);
-                    const Icon = row.icon;
                     return (
                       <motion.tr
                         key={row.key}
