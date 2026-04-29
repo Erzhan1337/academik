@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Award, CheckCircle2, XCircle, ChevronRight,
-  Globe, GraduationCap, FileText, Calendar, ArrowRight,
+  Globe, GraduationCap, FileText, Calendar, ArrowRight, MapPin,
 } from "lucide-react";
 import { PROGRAMS, BOLASHAK_QUIZ } from "@/lib/data";
 
@@ -246,18 +246,29 @@ export default function BolashakPage() {
         >
           Партнёрские университеты
         </motion.h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {PARTNER_UNIS.map((u, i) => (
             <motion.div
               key={u.name}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -2 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.07 }}
-              className="bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl p-3 text-center card-hover"
+              transition={{ delay: i * 0.05 }}
+              className="group flex items-center gap-3.5 rounded-xl border border-ink-200 bg-white p-3 shadow-sm transition-all duration-200 hover:border-amber-300 hover:shadow-md hover:bg-amber-50/30 dark:border-ink-800 dark:bg-ink-900 dark:hover:border-amber-500/50 dark:hover:bg-amber-900/10"
             >
-              <div className="text-sm font-semibold text-ink-900 dark:text-white mb-0.5">{u.name}</div>
-              <div className="text-xs text-ink-400 dark:text-ink-500">{u.country}</div>
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600 transition-colors group-hover:bg-amber-100 group-hover:text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 dark:group-hover:bg-amber-500/20">
+                <Globe className="h-4 w-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="truncate text-sm font-semibold text-ink-900 dark:text-white transition-colors group-hover:text-amber-700 dark:group-hover:text-amber-300">
+                  {u.name}
+                </div>
+                <div className="flex items-center gap-1 text-xs text-ink-500 dark:text-ink-400 mt-0.5">
+                  <MapPin className="h-3 w-3 shrink-0 text-amber-500/80" />
+                  <span className="truncate">{u.city}, {u.country}</span>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -276,24 +287,50 @@ export default function BolashakPage() {
             Смотреть все <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {bolashakPrograms.slice(0, 3).map((p, i) => (
-            <Link href={`/programs/${p.id}`} key={p.id}>
+            <Link href={`/programs/${p.id}`} key={p.id} className="block outline-none">
               <motion.div
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -6 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white dark:bg-ink-900 rounded-2xl border border-amber-200 dark:border-amber-900/50 p-4 card-hover"
+                transition={{ delay: i * 0.1, duration: 0.3 }}
+                className="group relative overflow-hidden bg-white dark:bg-ink-900 rounded-3xl border border-ink-200 dark:border-ink-800 p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 hover:border-amber-300 dark:hover:border-amber-500/40 h-full flex flex-col"
               >
-                <div className="tag-pill-gold inline-flex items-center gap-1 mb-2">
-                  <Award className="w-3 h-3" /> Болашак
-                </div>
-                <h3 className="font-semibold text-ink-900 dark:text-white text-sm mb-1">{p.title}</h3>
-                <p className="text-xs text-ink-500 dark:text-ink-400 mb-3">{p.university}</p>
-                <div className="flex items-center justify-between text-xs text-ink-500 dark:text-ink-400">
-                  <span>{p.city}</span>
-                  <span className="font-semibold text-ink-900 dark:text-white">{p.costLabel}</span>
+                {/* Glow effect on hover */}
+                <div className="absolute -inset-px rounded-3xl bg-gradient-to-br from-amber-500/0 via-amber-500/0 to-amber-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none" />
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-amber-400/20 dark:bg-amber-500/15 rounded-full blur-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none" />
+
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="flex justify-between items-start mb-5">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-100 to-orange-50 dark:from-amber-500/20 dark:to-orange-500/10 text-amber-700 dark:text-amber-400 border border-amber-200/80 dark:border-amber-500/30 shadow-sm backdrop-blur-sm">
+                      <Award className="w-3.5 h-3.5 text-amber-500" /> 
+                      <span className="font-bold tracking-wider uppercase text-[9px]">Болашак</span>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-ink-50 dark:bg-ink-800/80 flex items-center justify-center text-ink-400 transition-colors group-hover:bg-amber-50 group-hover:text-amber-600 dark:group-hover:bg-amber-500/20 dark:group-hover:text-amber-400">
+                      <ArrowRight className="w-4 h-4 -rotate-45 transition-transform duration-300 group-hover:rotate-0" />
+                    </div>
+                  </div>
+                  
+                  <h3 className="font-bold text-ink-900 dark:text-white text-lg mb-2 leading-tight transition-colors group-hover:text-amber-600 dark:group-hover:text-amber-400 line-clamp-2">
+                    {p.title}
+                  </h3>
+                  
+                  <p className="text-sm font-medium text-ink-600 dark:text-ink-300 mb-6 flex items-start gap-2 line-clamp-2">
+                    <GraduationCap className="w-4 h-4 text-ink-400 shrink-0 mt-0.5" />
+                    {p.university}
+                  </p>
+                  
+                  <div className="flex items-center justify-between text-sm border-t border-ink-100 dark:border-ink-800/60 pt-4 mt-auto">
+                    <div className="flex items-center gap-1.5 text-ink-500 dark:text-ink-400">
+                      <MapPin className="w-4 h-4 text-amber-500/70" />
+                      <span className="truncate max-w-[120px]">{p.city}</span>
+                    </div>
+                    <div className="font-bold text-ink-900 dark:text-white bg-ink-50 dark:bg-ink-800/50 px-2.5 py-1 rounded-lg border border-ink-200/50 dark:border-ink-700/50">
+                      {p.costLabel}
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </Link>

@@ -115,7 +115,7 @@ function ProgramsContent() {
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-3xl sm:text-4xl font-bold text-ink-900 mb-2"
+          className="mb-2 text-3xl font-bold text-ink-900 dark:text-white sm:text-4xl"
           style={{ fontFamily: "var(--font-display)" }}
         >
           Каталог программ
