@@ -284,10 +284,10 @@ export default function ProfilePage() {
           <StatCard icon={BarChart2} label="Сравнение" value={`${items.length}/3`} helper="можно добавить ещё" href="/compare" />
         </section>
 
-        <section className="mt-6 grid gap-6 lg:mt-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-8">
-          <div className="flex flex-col gap-6 lg:gap-8">
+        <section className="mt-6 grid min-w-0 gap-6 lg:mt-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] lg:gap-8">
+          <div className="flex min-w-0 flex-col gap-6 lg:gap-8">
             <Panel title="Документы к подаче" description="Показываем только то, что важно сейчас. Полный список остаётся в чек-листе." actionHref="/checklist" actionLabel="Открыть чек-лист">
-              <div className="rounded-[1.5rem] border border-ink-200 bg-white/70 p-5 dark:border-ink-800 dark:bg-ink-950/50">
+              <div className="min-w-0 rounded-[1.25rem] border border-ink-200 bg-white/70 p-4 dark:border-ink-800 dark:bg-ink-950/50 sm:rounded-[1.5rem] sm:p-5">
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-sm font-semibold text-ink-700 dark:text-ink-200">Общий прогресс</span>
                   <span className="text-sm font-black text-brand-600 dark:text-brand-400">{checklistStats.progress}%</span>
@@ -310,7 +310,7 @@ export default function ProfilePage() {
                 {missingRequiredDocs.length > 0 ? (
                   <div className="flex flex-col gap-2">
                     {missingRequiredDocs.map((doc) => (
-                      <div key={doc.id} className="flex items-center gap-3 rounded-2xl border border-ink-200 bg-ink-50 px-4 py-3 dark:border-ink-800 dark:bg-ink-950/50">
+                      <div key={doc.id} className="flex min-w-0 items-center gap-3 rounded-2xl border border-ink-200 bg-ink-50 px-3 py-3 dark:border-ink-800 dark:bg-ink-950/50 sm:px-4">
                         <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white text-ink-400 dark:bg-ink-900">
                           <FileCheck className="h-4 w-4" />
                         </div>
@@ -328,7 +328,7 @@ export default function ProfilePage() {
             </Panel>
 
             <Panel title="Мои программы" description="Избранные и подходящие программы в одном месте." actionHref="/programs" actionLabel="Каталог">
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid min-w-0 gap-4 md:grid-cols-2">
                 <ProgramGroup title="В календаре" empty="Добавьте программу в календарь, чтобы видеть дедлайны здесь.">
                   {favorites.slice(0, 3).map((program) => (
                     <ProgramRow key={program.id} program={program} />
@@ -343,7 +343,7 @@ export default function ProfilePage() {
             </Panel>
           </div>
 
-          <aside className="flex flex-col gap-6 lg:gap-8">
+          <aside className="flex min-w-0 flex-col gap-6 lg:gap-8">
             <Panel title="Профиль поступающего" description="Короткая карточка, по которой строится подборка." actionHref="/profile" actionLabel="Профиль">
               <div className="grid gap-3">
                 <SummaryRow label="Степень" value={profile.targetDegree} />
@@ -594,9 +594,9 @@ function Panel({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-[1.5rem] border border-ink-200 bg-white p-4 shadow-sm dark:border-ink-800 dark:bg-ink-950 sm:rounded-[2rem] sm:p-6">
-      <div className="mb-5 flex items-start justify-between gap-4">
-        <div>
+    <section className="min-w-0 overflow-hidden rounded-[1.25rem] border border-ink-200 bg-white p-4 shadow-sm dark:border-ink-800 dark:bg-ink-950 sm:rounded-[2rem] sm:p-6">
+      <div className="mb-5 flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+        <div className="min-w-0">
           <h2 className="text-xl font-bold text-ink-950 dark:text-white sm:text-2xl" style={{ fontFamily: "var(--font-display)" }}>
             {title}
           </h2>
@@ -604,7 +604,7 @@ function Panel({
         </div>
         <Link
           href={actionHref}
-          className="hidden shrink-0 items-center gap-1.5 rounded-xl bg-ink-100 px-3 py-2 text-xs font-semibold text-ink-700 transition-colors hover:bg-brand-50 hover:text-brand-700 dark:bg-ink-800 dark:text-ink-200 dark:hover:bg-brand-500/10 dark:hover:text-brand-300 sm:flex"
+          className="inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-xl bg-ink-100 px-3 py-2 text-xs font-semibold text-ink-700 transition-colors hover:bg-brand-50 hover:text-brand-700 dark:bg-ink-800 dark:text-ink-200 dark:hover:bg-brand-500/10 dark:hover:text-brand-300 sm:w-auto"
         >
           {actionLabel}
           <ArrowRight className="h-3.5 w-3.5" />
@@ -628,9 +628,9 @@ function ProgramGroup({ title, empty, children }: { title: string; empty: string
   const hasChildren = Array.isArray(children) ? children.length > 0 : Boolean(children);
 
   return (
-    <div>
+    <div className="min-w-0">
       <h3 className="mb-3 text-sm font-black uppercase tracking-wider text-ink-500 dark:text-ink-400">{title}</h3>
-      <div className="flex flex-col gap-3">
+      <div className="flex min-w-0 flex-col gap-3">
         {hasChildren ? children : <EmptyState text={empty} />}
       </div>
     </div>
@@ -639,8 +639,8 @@ function ProgramGroup({ title, empty, children }: { title: string; empty: string
 
 function ProgramRow({ program }: { program: (typeof PROGRAMS)[number] }) {
   return (
-    <Link href={`/programs/${program.id}`} className="block">
-      <div className="rounded-2xl border border-ink-200 bg-ink-50 p-4 transition-colors hover:border-brand-200 hover:bg-brand-50 dark:border-ink-800 dark:bg-ink-950/50 dark:hover:border-brand-500/30 dark:hover:bg-brand-500/10">
+    <Link href={`/programs/${program.id}`} className="block min-w-0">
+      <div className="min-w-0 overflow-hidden rounded-2xl border border-ink-200 bg-ink-50 p-3 transition-colors hover:border-brand-200 hover:bg-brand-50 dark:border-ink-800 dark:bg-ink-950/50 dark:hover:border-brand-500/30 dark:hover:bg-brand-500/10 sm:p-4">
         <div className="mb-2 flex flex-wrap items-center gap-2">
           {program.bolashak && (
             <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:bg-amber-500/10 dark:text-amber-300">
@@ -652,7 +652,7 @@ function ProgramRow({ program }: { program: (typeof PROGRAMS)[number] }) {
             {program.field}
           </span>
         </div>
-        <h3 className="line-clamp-2 text-sm font-bold text-ink-950 dark:text-white">{program.title}</h3>
+        <h3 className="line-clamp-2 min-w-0 break-words text-sm font-bold text-ink-950 dark:text-white">{program.title}</h3>
         <p className="mt-1 line-clamp-1 text-xs text-ink-500 dark:text-ink-400">{program.university}</p>
         <div className="mt-3 flex flex-col gap-1 text-xs min-[380px]:flex-row min-[380px]:items-center min-[380px]:justify-between min-[380px]:gap-3">
           <span className="font-semibold text-brand-600 dark:text-brand-400">{program.deadlineLabel}</span>
@@ -665,9 +665,9 @@ function ProgramRow({ program }: { program: (typeof PROGRAMS)[number] }) {
 
 function SummaryRow({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="flex flex-col items-start justify-between gap-1 rounded-2xl border border-ink-200 bg-ink-50 px-4 py-3 dark:border-ink-800 dark:bg-ink-950/50 min-[420px]:flex-row min-[420px]:items-center min-[420px]:gap-4">
+    <div className="flex min-w-0 flex-col items-start justify-between gap-1 rounded-2xl border border-ink-200 bg-ink-50 px-3 py-3 dark:border-ink-800 dark:bg-ink-950/50 min-[420px]:flex-row min-[420px]:items-center min-[420px]:gap-4 sm:px-4">
       <span className="text-sm text-ink-500 dark:text-ink-400">{label}</span>
-      <span className="text-left text-sm font-bold text-ink-900 dark:text-white min-[420px]:text-right">{value}</span>
+      <span className="min-w-0 break-words text-left text-sm font-bold text-ink-900 dark:text-white min-[420px]:text-right">{value}</span>
     </div>
   );
 }
