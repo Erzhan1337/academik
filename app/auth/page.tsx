@@ -98,7 +98,7 @@ export default function AuthPage() {
                 {mode === tab && (
                   <motion.div
                     layoutId="auth-tab"
-                    className="absolute inset-0 bg-white dark:bg-ink-700 rounded-lg shadow-sm"
+                    className="absolute inset-0 bg-white shadow-sm dark:bg-ink-900 dark:shadow-none dark:ring-1 dark:ring-white/10 rounded-lg"
                     transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
                   />
                 )}
