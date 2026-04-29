@@ -116,10 +116,10 @@ export default function CalculatorPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-500 relative overflow-hidden">
-      {/* Background Mesh */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-500/10 dark:bg-brand-500/5 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-lighten" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-violet-500/10 dark:bg-violet-500/5 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-lighten" />
+      {/* Background Mesh — fixed so it doesn't repaint on scroll */}
+      <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-500/10 dark:bg-brand-500/5 rounded-full blur-2xl" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-violet-500/10 dark:bg-violet-500/5 rounded-full blur-2xl" />
       </div>
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-24 relative z-10">
@@ -154,9 +154,9 @@ export default function CalculatorPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
           {/* Controls Panel */}
           <motion.div
-            initial={{ opacity: 0, x: -20, filter: "blur(10px)" }}
-            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
             className="lg:col-span-2 space-y-6"
           >
             {/* Bolashak Premium Toggle */}
@@ -165,7 +165,7 @@ export default function CalculatorPage() {
               className={`relative overflow-hidden cursor-pointer rounded-[2rem] p-6 transition-all duration-500 shadow-[0_4px_24px_rgba(0,0,0,0.10)] dark:shadow-xl border ${
                 isBolashak 
                   ? "bg-gradient-to-br from-brand-600 to-violet-700 border-transparent shadow-brand-500/30" 
-                  : "bg-white dark:bg-ink-900/40 backdrop-blur-2xl border-ink-200/80 dark:border-ink-800/50 hover:border-brand-500/50"
+                  : "bg-white dark:bg-ink-900 border-ink-200/80 dark:border-ink-800/50 hover:border-brand-500/50"
               }`}
             >
               {isBolashak && (
@@ -193,7 +193,7 @@ export default function CalculatorPage() {
             </div>
 
             {/* Main Form */}
-            <div className="bg-white dark:bg-ink-900/40 backdrop-blur-2xl rounded-[2rem] border border-ink-200/80 dark:border-ink-800/50 shadow-[0_4px_32px_rgba(0,0,0,0.10)] dark:shadow-[0_4px_32px_rgba(0,0,0,0.4)] p-8 flex flex-col gap-8 relative overflow-hidden">
+            <div className="bg-white dark:bg-ink-900 rounded-[2rem] border border-ink-200/80 dark:border-ink-800/50 shadow-[0_4px_32px_rgba(0,0,0,0.10)] dark:shadow-[0_4px_32px_rgba(0,0,0,0.4)] p-8 flex flex-col gap-8 relative overflow-hidden">
               
               {/* Presets */}
               <div>
@@ -289,12 +289,12 @@ export default function CalculatorPage() {
 
           {/* Right Panel - Total Dashboard */}
           <motion.div
-             initial={{ opacity: 0, x: 20, filter: "blur(10px)" }} 
-             animate={{ opacity: 1, x: 0, filter: "blur(0px)" }} 
-             transition={{ delay: 0.1, duration: 0.5 }}
+             initial={{ opacity: 0, x: 20 }} 
+             animate={{ opacity: 1, x: 0 }} 
+             transition={{ delay: 0.1, duration: 0.4 }}
              className="relative"
           >
-            <div className="sticky top-28 bg-white dark:bg-ink-950 backdrop-blur-2xl text-ink-950 dark:text-white rounded-[2rem] p-8 shadow-[0_4px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_4px_32px_rgba(0,0,0,0.5)] border border-ink-200/80 dark:border-ink-800/50 overflow-hidden">
+            <div className="sticky top-28 will-change-transform bg-white dark:bg-ink-950 text-ink-950 dark:text-white rounded-[2rem] p-8 shadow-[0_4px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_4px_32px_rgba(0,0,0,0.5)] border border-ink-200/80 dark:border-ink-800/50 overflow-hidden">
               <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-brand-500/10 dark:bg-brand-500/20 rounded-full blur-3xl pointer-events-none" />
               
               <h3 className="font-bold text-xl mb-8 flex items-center gap-3 text-ink-950 dark:text-white">
