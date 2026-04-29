@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { CompareProvider } from "@/lib/compare-store";
-import { CompareBar } from "@/components/CompareBar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AppShell } from "@/components/AppShell";
 
 export const metadata: Metadata = {
   title: "Academik.kz — магистратура в Казахстане",
@@ -30,13 +28,11 @@ export default function RootLayout({
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <CompareProvider>
-            <Navbar />
-            <main>{children}</main>
-            <CompareBar />
-            <Footer />
+            <AppShell>{children}</AppShell>
           </CompareProvider>
         </ThemeProvider>
       </body>
     </html>
   );
 }
+

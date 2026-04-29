@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, GraduationCap, ChevronRight } from "lucide-react";
+import { Menu, X, GraduationCap, ChevronRight, User } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 const NAV_LINKS = [
@@ -89,10 +89,11 @@ export function Navbar() {
               <ThemeToggle />
               <div className="w-px h-5 bg-ink-200 dark:bg-ink-800 mx-1" />
               <Link
-                href="/checklist"
-                className="text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-lg transition-colors shadow-sm"
+                href="/auth"
+                className="flex items-center gap-2 text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-lg transition-colors shadow-sm"
               >
-                Чек-лист
+                <User className="w-4 h-4" />
+                Войти
               </Link>
             </div>
 
@@ -143,10 +144,11 @@ export function Navbar() {
               ))}
               <div className="mt-3 pt-3 border-t border-ink-100 dark:border-ink-800">
                 <Link
-                  href="/programs"
-                  className="flex w-full items-center justify-center py-2.5 text-sm font-semibold text-white bg-brand-600 rounded-lg"
+                  href="/auth"
+                  className="flex w-full items-center justify-center gap-2 py-2.5 text-sm font-semibold text-white bg-brand-600 rounded-lg"
                 >
-                  Найти программу
+                  <User className="w-4 h-4" />
+                  Войти
                 </Link>
               </div>
             </nav>
