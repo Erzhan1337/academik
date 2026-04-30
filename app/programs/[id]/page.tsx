@@ -3,44 +3,80 @@
 import { useState, use } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowLeft, MapPin, Clock, Star, Award, Globe,
-  FileCheck, Calendar, BarChart2, CheckCircle2, Circle,
-  Bell, X, ChevronRight,
+  Calendar, BarChart2, CheckCircle2,
+  Bell, X,
 } from "lucide-react";
 import { PROGRAMS } from "@/lib/data";
+import { useAuthStore } from "@/lib/auth-store";
 import { useCompareStore } from "@/lib/compare-store";
 
 const TABS = ["Обзор", "Требования", "Документы", "Сроки", "Отзывы и вопросы"] as const;
+const REMINDER_OPTIONS = [30, 14, 7, 1];
 
 export default function ProgramDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const router = useRouter();
   const { id } = use(params);
   const program = PROGRAMS.find((p) => p.id === id);
   if (!program) notFound();
 
   const [tab, setTab] = useState<typeof TABS[number]>("Обзор");
   const [checked, setChecked] = useState<string[]>([]);
-  const [showModal, setShowModal] = useState(false);
-  const [email, setEmail] = useState("");
+  const [modal, setModal] = useState<"auth" | "reminder" | null>(null);
+  const [selectedReminderDays, setSelectedReminderDays] = useState<number[]>([30, 7]);
   const [submitted, setSubmitted] = useState(false);
-  const { items, favorites, add, remove, toggleFavorite } = useCompareStore();
+  const user = useAuthStore((state) => state.user);
+  const { items, favorites, reminders, add, remove, toggleFavorite, setReminder } = useCompareStore();
   const inCompare = items.some((p) => p.id === program.id);
   const inFavorites = favorites.some((p) => p.id === program.id);
+  const activeReminderDays = reminders[program.id] ?? [];
+  const hasReminders = activeReminderDays.length > 0;
 
   const toggleDoc = (doc: string) =>
     setChecked((prev) => (prev.includes(doc) ? prev.filter((d) => d !== doc) : [...prev, doc]));
 
   const progress = Math.round((checked.length / program.documents.length) * 100);
 
+  const openReminderModal = () => {
+    if (!user) {
+      setModal("auth");
+      return;
+    }
+
+    setSelectedReminderDays(activeReminderDays.length > 0 ? activeReminderDays : [30, 7]);
+    setSubmitted(false);
+    setModal("reminder");
+  };
+
+  const handleCalendarClick = () => {
+    if (!user) {
+      setModal("auth");
+      return;
+    }
+
+    toggleFavorite(program);
+  };
+
   const handleReminderSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (selectedReminderDays.length === 0) return;
+
+    setReminder(program, selectedReminderDays);
     setSubmitted(true);
-    setTimeout(() => { setShowModal(false); setSubmitted(false); setEmail(""); }, 2000);
+    setTimeout(() => { setModal(null); setSubmitted(false); }, 1400);
+  };
+
+  const toggleReminderDay = (day: number) => {
+    setSelectedReminderDays((current) =>
+      current.includes(day) ? current.filter((value) => value !== day) : [...current, day].sort((a, b) => b - a),
+    );
   };
 
   return (
@@ -288,11 +324,13 @@ export default function ProgramDetailPage({
 
             <div className="flex flex-col gap-2">
               <button
-                onClick={() => setShowModal(true)}
-                className="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors"
+                onClick={openReminderModal}
+                className={`w-full flex items-center justify-center gap-2 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors ${
+                  hasReminders ? "bg-emerald-600 hover:bg-emerald-700" : "bg-brand-600 hover:bg-brand-700"
+                }`}
               >
                 <Bell className="w-4 h-4" />
-                Напомнить о сроке подачи
+                {hasReminders ? "Напоминания включены" : "Напомнить о сроке подачи"}
               </button>
               <button
                 onClick={() => inCompare ? remove(program.id) : add(program)}
@@ -307,7 +345,7 @@ export default function ProgramDetailPage({
               </button>
               
               <button
-                onClick={() => toggleFavorite(program)}
+                onClick={handleCalendarClick}
                 className={`w-full flex items-center justify-center gap-2 text-sm font-semibold py-2.5 rounded-xl border transition-colors ${
                   inFavorites
                     ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-transparent"
@@ -348,13 +386,13 @@ export default function ProgramDetailPage({
 
       {/* Deadline reminder modal */}
       <AnimatePresence>
-        {showModal && (
+        {modal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4"
-            onClick={(e) => e.target === e.currentTarget && setShowModal(false)}
+            onClick={(e) => e.target === e.currentTarget && setModal(null)}
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
@@ -363,30 +401,70 @@ export default function ProgramDetailPage({
               className="bg-white rounded-2xl border border-ink-200 p-6 max-w-sm w-full shadow-2xl dark:bg-ink-950 dark:border-ink-800"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-ink-900 dark:text-white">Напоминание о сроке подачи</h3>
-                <button onClick={() => setShowModal(false)} className="text-ink-400 hover:text-ink-700 dark:text-ink-500 dark:hover:text-white">
+                <h3 className="font-bold text-ink-900 dark:text-white">
+                  {modal === "auth" ? "Войдите в аккаунт" : "Напоминания о дедлайне"}
+                </h3>
+                <button onClick={() => setModal(null)} className="text-ink-400 hover:text-ink-700 dark:text-ink-500 dark:hover:text-white">
                   <X className="w-5 h-5" />
                 </button>
               </div>
-              {!submitted ? (
-                <form onSubmit={handleReminderSubmit}>
-                  <p className="text-sm text-ink-500 mb-4 dark:text-ink-400">
-                    Мы пришлём напоминание на email за неделю до срока подачи{" "}
-                    <strong className="text-amber-600 dark:text-amber-300">{program.deadlineLabel}</strong>.
+
+              {modal === "auth" ? (
+                <div>
+                  <p className="text-sm leading-6 text-ink-500 mb-5 dark:text-ink-400">
+                    Войдите, чтобы сохранить программу в календарь и включить напоминания о сроке подачи.
                   </p>
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
-                    className="w-full border border-ink-200 rounded-xl px-4 py-2.5 text-sm mb-4 text-ink-900 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-ink-900 dark:border-ink-800 dark:text-white"
-                  />
+                  <div className="grid gap-2">
+                    <button
+                      type="button"
+                      onClick={() => router.push("/auth")}
+                      className="w-full bg-brand-600 text-white font-semibold py-2.5 rounded-xl text-sm hover:bg-brand-700 transition-colors"
+                    >
+                      Войти
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setModal(null)}
+                      className="w-full border border-ink-200 bg-ink-50 text-ink-700 font-semibold py-2.5 rounded-xl text-sm transition-colors hover:bg-ink-100 dark:border-ink-800 dark:bg-ink-900 dark:text-ink-200 dark:hover:bg-ink-800"
+                    >
+                      Отмена
+                    </button>
+                  </div>
+                </div>
+              ) : !submitted ? (
+                <form onSubmit={handleReminderSubmit}>
+                  <p className="text-sm leading-6 text-ink-500 mb-4 dark:text-ink-400">
+                    Напоминания будут привязаны к аккаунту <span className="font-semibold text-ink-800 dark:text-ink-100">{user?.email}</span>. Программа также появится в календаре.
+                  </p>
+                  <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
+                    Дедлайн:{" "}
+                    <strong className="text-amber-600 dark:text-amber-300">{program.deadlineLabel}</strong>.
+                  </div>
+                  <div className="mb-5 grid grid-cols-2 gap-2">
+                    {REMINDER_OPTIONS.map((day) => {
+                      const selected = selectedReminderDays.includes(day);
+                      return (
+                        <button
+                          key={day}
+                          type="button"
+                          onClick={() => toggleReminderDay(day)}
+                          className={`rounded-xl border px-3 py-2.5 text-sm font-semibold transition-colors ${
+                            selected
+                              ? "border-brand-600 bg-brand-50 text-brand-700 dark:border-brand-500/30 dark:bg-brand-500/10 dark:text-brand-300"
+                              : "border-ink-200 bg-ink-50 text-ink-600 hover:bg-ink-100 dark:border-ink-800 dark:bg-ink-900 dark:text-ink-300 dark:hover:bg-ink-800"
+                          }`}
+                        >
+                          за {day} {day === 1 ? "день" : "дн."}
+                        </button>
+                      );
+                    })}
+                  </div>
                   <button
                     type="submit"
-                    className="w-full bg-brand-600 text-white font-semibold py-2.5 rounded-xl text-sm hover:bg-brand-700 transition-colors"
+                    disabled={selectedReminderDays.length === 0}
+                    className="w-full bg-brand-600 text-white font-semibold py-2.5 rounded-xl text-sm hover:bg-brand-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    Подписаться
+                    Сохранить напоминания
                   </button>
                 </form>
               ) : (
@@ -397,7 +475,7 @@ export default function ProgramDetailPage({
                 >
                   <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-2" />
                   <p className="font-semibold text-ink-900 dark:text-white">Готово!</p>
-                  <p className="text-sm text-ink-500 mt-1 dark:text-ink-400">Напоминание будет отправлено на {email}</p>
+                  <p className="text-sm text-ink-500 mt-1 dark:text-ink-400">Программа добавлена в календарь, напоминания включены.</p>
                 </motion.div>
               )}
             </motion.div>

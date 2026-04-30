@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import Link from "next/link";
-import { Calendar as CalendarIcon, ArrowRight, ExternalLink } from "lucide-react";
+import { Calendar as CalendarIcon, ArrowRight, Bell, BellOff, ExternalLink } from "lucide-react";
 import { useCompareStore } from "@/lib/compare-store";
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
@@ -60,7 +60,7 @@ const getDeadlineStatus = (dateStr: string) => {
 };
 
 export default function CalendarPage() {
-  const { favorites, toggleFavorite } = useCompareStore();
+  const { favorites, reminders, toggleFavorite, clearReminder } = useCompareStore();
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
@@ -95,6 +95,8 @@ export default function CalendarPage() {
         <div className="flex flex-col gap-4 relative before:absolute before:inset-y-0 before:left-6 before:w-px before:bg-ink-200 dark:before:bg-ink-800">
           {favorites.map((p, i) => {
             const status = getDeadlineStatus(p.deadline);
+            const reminderDays = reminders[p.id] ?? [];
+            const hasReminders = reminderDays.length > 0;
 
             return (
               <motion.div
@@ -115,6 +117,16 @@ export default function CalendarPage() {
                       <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${status.className}`}>
                         {status.label}
                       </span>
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+                          hasReminders
+                            ? "border-emerald-100 bg-emerald-50 text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-300"
+                            : "border-ink-200 bg-ink-50 text-ink-500 dark:border-ink-800 dark:bg-ink-950 dark:text-ink-400"
+                        }`}
+                      >
+                        {hasReminders ? <Bell className="h-3 w-3" /> : <BellOff className="h-3 w-3" />}
+                        {hasReminders ? `Напоминания: ${reminderDays.join(", ")} дн.` : "Без напоминаний"}
+                      </span>
                     </div>
                     <Link href={`/programs/${p.id}`}>
                       <h3 className="text-lg font-semibold text-ink-900 dark:text-white hover:underline mb-1">
@@ -125,6 +137,24 @@ export default function CalendarPage() {
                   </div>
                 
                   <div className="flex flex-wrap sm:flex-col gap-2 shrink-0">
+                    {hasReminders && (
+                      <>
+                        <Link
+                          href={`/programs/${p.id}`}
+                          className="flex items-center gap-1.5 text-xs text-brand-700 bg-brand-50 hover:bg-brand-100 dark:bg-brand-500/10 dark:text-brand-300 dark:hover:bg-brand-500/15 font-semibold px-3 py-2 rounded-lg transition-colors border border-brand-100 dark:border-brand-500/20"
+                        >
+                          <Bell className="w-3.5 h-3.5" />
+                          Изменить напоминания
+                        </Link>
+                        <button
+                          onClick={() => clearReminder(p.id)}
+                          className="flex items-center gap-1.5 text-xs text-ink-600 bg-ink-50 hover:bg-ink-100 dark:bg-ink-950 dark:text-ink-300 dark:hover:bg-ink-800 font-semibold px-3 py-2 rounded-lg transition-colors border border-ink-200 dark:border-ink-800"
+                        >
+                          <BellOff className="w-3.5 h-3.5" />
+                          Выключить напоминания
+                        </button>
+                      </>
+                    )}
                     <a
                       href={generateGoogleCalendarUrl(p.title, p.deadline)}
                       target="_blank" rel="noopener noreferrer"
