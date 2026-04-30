@@ -12,7 +12,7 @@ const ALL_FIELDS = "Все направления";
 const ALL_DEGREES = "Все степени";
 const MAX_COST = 3000;
 
-type SortBy = "cost-asc" | "cost-desc" | "deadline" | "rating";
+type SortBy = "cost-asc" | "cost-desc" | "deadline";
 type DeadlineFilter = "all" | "soon" | "later" | "past";
 
 const DEADLINE_FILTER_LABELS: Record<DeadlineFilter, string> = {
@@ -68,7 +68,7 @@ function ProgramsContent() {
   const [langs, setLangs] = useState<string[]>([]);
   const [bolashak, setBolashak] = useState(initialBolashak);
   const [maxCost, setMaxCost] = useState(MAX_COST);
-  const [sortBy, setSortBy] = useState<SortBy>("rating");
+  const [sortBy, setSortBy] = useState<SortBy>("deadline");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const toggleLang = (l: string) =>
@@ -83,7 +83,7 @@ function ProgramsContent() {
     setLangs([]);
     setBolashak(false);
     setMaxCost(MAX_COST);
-    setSortBy("rating");
+    setSortBy("deadline");
   };
 
   const filtered = useMemo(() => {
@@ -104,8 +104,7 @@ function ProgramsContent() {
     return [...result].sort((a, b) => {
       if (sortBy === "cost-asc") return a.cost - b.cost;
       if (sortBy === "cost-desc") return b.cost - a.cost;
-      if (sortBy === "deadline") return a.deadline.localeCompare(b.deadline);
-      return b.rating - a.rating;
+      return a.deadline.localeCompare(b.deadline);
     });
   }, [query, city, field, degree, deadlineFilter, langs, bolashak, maxCost, sortBy]);
 
@@ -208,7 +207,6 @@ function ProgramsContent() {
           onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
           className="hidden sm:block bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl px-3 py-2.5 text-sm text-ink-700 dark:text-ink-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
         >
-          <option value="rating">По рейтингу</option>
           <option value="cost-asc">Дешевле сначала</option>
           <option value="cost-desc">Дороже сначала</option>
           <option value="deadline">По сроку подачи</option>
@@ -475,7 +473,6 @@ function FilterPanel({
           onChange={(e) => setSortBy(e.target.value as SortBy)}
           className="w-full bg-ink-50 dark:bg-ink-950 border border-ink-200 dark:border-ink-800 rounded-lg px-3 py-2 text-sm text-ink-800 dark:text-white focus:outline-none"
         >
-          <option value="rating">По рейтингу</option>
           <option value="cost-asc">Дешевле сначала</option>
           <option value="cost-desc">Дороже сначала</option>
           <option value="deadline">По сроку подачи</option>

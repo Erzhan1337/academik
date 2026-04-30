@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, MapPin, Clock, Star, Award, Globe,
+  ArrowLeft, MapPin, Clock, Award, Globe,
   Calendar, BarChart2, CheckCircle2,
   Bell, ExternalLink, X,
 } from "lucide-react";
@@ -121,10 +121,6 @@ export default function ProgramDetailPage({
               <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" />{program.city}</span>
               <span className="flex items-center gap-1.5"><Clock className="w-4 h-4" />{program.duration}</span>
               <span className="flex items-center gap-1.5"><Globe className="w-4 h-4" />{program.language.join(", ")}</span>
-              <span className="flex items-center gap-1.5">
-                <Star className="w-4 h-4 text-gold-500 fill-gold-500" />
-                {program.rating} · {program.students.toLocaleString("ru")} студентов
-              </span>
             </div>
           </motion.div>
 
