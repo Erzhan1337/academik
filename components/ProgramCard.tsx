@@ -13,11 +13,28 @@ import {
   Star,
 } from "lucide-react";
 import type { Program } from "@/lib/data";
+import { type StudyProfile, useAuthStore } from "@/lib/auth-store";
 import { useCompareStore } from "@/lib/compare-store";
 
-export function ProgramCard({ program, index = 0 }: { program: Program; index?: number }) {
+const PROFILE_MATCH_KEYS: (keyof StudyProfile)[] = ["field", "city", "language"];
+
+function hasProfileDataForMatch(profile?: StudyProfile) {
+  return Boolean(profile && PROFILE_MATCH_KEYS.every((key) => String(profile[key] ?? "").trim()));
+}
+
+export function ProgramCard({
+  program,
+  index = 0,
+  hasActiveFilters = false,
+}: {
+  program: Program;
+  index?: number;
+  hasActiveFilters?: boolean;
+}) {
+  const user = useAuthStore((state) => state.user);
   const { items, add, remove } = useCompareStore();
   const isInCompare = items.some((p) => p.id === program.id);
+  const canShowPersonalMatch = hasProfileDataForMatch(user?.profile);
 
   const toggle = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -65,9 +82,17 @@ export function ProgramCard({ program, index = 0 }: { program: Program; index?: 
             </div>
 
             <div className="flex shrink-0 items-center gap-2">
-              {program.matchPercentage && (
+              {canShowPersonalMatch && program.matchPercentage ? (
                 <div className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-1 text-[11px] font-bold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-500/20">
                   <span>{program.matchPercentage}% совпадение</span>
+                </div>
+              ) : hasActiveFilters ? (
+                <div className="inline-flex items-center gap-1 rounded-md border border-brand-200/70 bg-brand-50 px-2 py-1 text-[11px] font-bold text-brand-700 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-300">
+                  <span>Подходит под фильтры</span>
+                </div>
+              ) : (
+                <div className="inline-flex items-center gap-1 rounded-md border border-ink-200 bg-ink-50 px-2 py-1 text-[11px] font-bold text-ink-500 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-300">
+                  <span>Заполните профиль</span>
                 </div>
               )}
               <div className="inline-flex items-center gap-1 rounded-md bg-ink-100 px-2 py-1 text-sm font-semibold text-ink-900 dark:bg-ink-800 dark:text-white">

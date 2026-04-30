@@ -44,6 +44,21 @@ const DEFAULT_PROFILE: StudyProfile = {
 };
 
 const createDefaultProfile = (): StudyProfile => ({ ...DEFAULT_PROFILE });
+const createEmptyProfile = (): StudyProfile => ({
+  goal: "",
+  targetDegree: "",
+  field: "",
+  city: "",
+  language: "",
+  gpa: "",
+  testScore: "",
+  budget: "",
+  admissionYear: "",
+  experience: "",
+  notes: "",
+  emailNotifications: true,
+  interestedBolashak: false,
+});
 
 const createAvatar = (name: string) =>
   name
@@ -112,7 +127,7 @@ export const useAuthStore = create<AuthStore>()(
           name,
           email,
           avatar: createAvatar(name),
-          profile: createDefaultProfile(),
+          profile: createEmptyProfile(),
         };
         set({ user: newUser });
         return { success: true };

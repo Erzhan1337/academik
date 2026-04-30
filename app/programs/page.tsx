@@ -249,7 +249,7 @@ function ProgramsContent() {
                 className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-4"
               >
                 {filtered.map((p, i) => (
-                  <ProgramCard key={p.id} program={p} index={i} />
+                  <ProgramCard key={p.id} program={p} index={i} hasActiveFilters={hasFilters} />
                 ))}
               </motion.div>
             ) : (
