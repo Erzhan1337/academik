@@ -18,6 +18,7 @@ export type Program = {
   rating: number;
   students: number;
   field: string;
+  applicationUrl: string;
   matchPercentage?: number;
 };
 
@@ -58,6 +59,7 @@ export const PROGRAMS: Program[] = [
     rating: 4.8,
     students: 1200,
     field: "Бизнес",
+    applicationUrl: "https://www.kbtu.kz/en/schools/business-school/graduate-programs-business-school",
     matchPercentage: 98,
   },
   {
@@ -95,6 +97,7 @@ export const PROGRAMS: Program[] = [
     rating: 4.9,
     students: 850,
     field: "IT",
+    applicationUrl: "https://nu.edu.kz/en/admissions/program/master-of-applied-artificial-intelligence-and-data-science",
     matchPercentage: 95,
   },
   {
@@ -130,6 +133,7 @@ export const PROGRAMS: Program[] = [
     rating: 4.5,
     students: 3200,
     field: "Право",
+    applicationUrl: "https://welcome.kaznu.kz/en/education_programs/magistracy/speciality/1815",
     matchPercentage: 82,
   },
   {
@@ -166,6 +170,7 @@ export const PROGRAMS: Program[] = [
     rating: 4.7,
     students: 1800,
     field: "Финансы",
+    applicationUrl: "https://kimep.edu.kz/bang-college-of-business/en/master-in-finance/",
     matchPercentage: 91,
   },
   {
@@ -199,6 +204,7 @@ export const PROGRAMS: Program[] = [
     rating: 4.3,
     students: 2400,
     field: "Педагогика",
+    applicationUrl: "https://hse.enu.kz/ru/page/departments/department-of-pedagogics/education-programme",
     matchPercentage: 75,
   },
   {
@@ -234,6 +240,7 @@ export const PROGRAMS: Program[] = [
     rating: 4.6,
     students: 600,
     field: "Инженерия",
+    applicationUrl: "https://kbtu.edu.kz/en/schools/school-of-energy-oil-and-gas-industry/masters-degree-program-of-the-school-of-energy-and-oil-and-gas-industry",
     matchPercentage: 88,
   },
 ];

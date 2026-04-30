@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowLeft, MapPin, Clock, Star, Award, Globe,
   Calendar, BarChart2, CheckCircle2,
-  Bell, X,
+  Bell, ExternalLink, X,
 } from "lucide-react";
 import { PROGRAMS } from "@/lib/data";
 import { useAuthStore } from "@/lib/auth-store";
@@ -326,10 +326,15 @@ export default function ProgramDetailPage({
                 <Calendar className="w-4 h-4" />
                 {inFavorites ? "В календаре ✓" : "Добавить в календарь"}
               </button>
-              <button className="w-full flex items-center justify-center gap-2 bg-ink-900 text-white text-sm font-semibold py-2.5 rounded-xl opacity-50 cursor-not-allowed dark:bg-white dark:text-ink-950">
+              <a
+                href={program.applicationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-2 bg-ink-900 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors hover:bg-ink-800 dark:bg-white dark:text-ink-950 dark:hover:bg-ink-200"
+              >
                 Подать заявку
-                <span className="text-[10px] font-normal opacity-70">— скоро</span>
-              </button>
+                <ExternalLink className="h-4 w-4" />
+              </a>
             </div>
           </div>
 
