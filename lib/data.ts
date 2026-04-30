@@ -8,6 +8,7 @@ export type Program = {
   costLabel: string;
   deadline: string;       // ISO date
   deadlineLabel: string;
+  degree: string;
   duration: string;
   bolashak: boolean;
   tags: string[];
@@ -29,8 +30,9 @@ export const PROGRAMS: Program[] = [
     language: ["Английский", "Казахский"],
     cost: 1800,
     costLabel: "1 800 000 ₸/год",
-    deadline: "2025-06-01",
-    deadlineLabel: "1 июня 2025",
+    deadline: "2026-06-01",
+    deadlineLabel: "1 июня 2026",
+    degree: "Магистратура",
     duration: "2 года",
     bolashak: true,
     tags: ["MBA", "Бизнес", "Международный"],
@@ -66,8 +68,9 @@ export const PROGRAMS: Program[] = [
     language: ["Английский"],
     cost: 2100,
     costLabel: "2 100 000 ₸/год",
-    deadline: "2025-05-15",
-    deadlineLabel: "15 мая 2025",
+    deadline: "2026-05-15",
+    deadlineLabel: "15 мая 2026",
+    degree: "Магистратура",
     duration: "2 года",
     bolashak: true,
     tags: ["IT", "AI", "Data Science"],
@@ -102,8 +105,9 @@ export const PROGRAMS: Program[] = [
     language: ["Казахский", "Русский"],
     cost: 900,
     costLabel: "900 000 ₸/год",
-    deadline: "2025-07-01",
-    deadlineLabel: "1 июля 2025",
+    deadline: "2026-07-01",
+    deadlineLabel: "1 июля 2026",
+    degree: "Магистратура",
     duration: "2 года",
     bolashak: false,
     tags: ["Право", "Госуправление", "Юриспруденция"],
@@ -136,8 +140,9 @@ export const PROGRAMS: Program[] = [
     language: ["Английский"],
     cost: 1600,
     costLabel: "1 600 000 ₸/год",
-    deadline: "2025-06-15",
-    deadlineLabel: "15 июня 2025",
+    deadline: "2026-06-15",
+    deadlineLabel: "15 июня 2026",
+    degree: "Магистратура",
     duration: "1.5 года",
     bolashak: true,
     tags: ["Финансы", "Банки", "CFA"],
@@ -171,8 +176,9 @@ export const PROGRAMS: Program[] = [
     language: ["Казахский", "Русский"],
     cost: 750,
     costLabel: "750 000 ₸/год",
-    deadline: "2025-08-01",
-    deadlineLabel: "1 августа 2025",
+    deadline: "2026-08-01",
+    deadlineLabel: "1 августа 2026",
+    degree: "Магистратура",
     duration: "2 года",
     bolashak: false,
     tags: ["Педагогика", "EdTech", "Образование"],
@@ -203,8 +209,9 @@ export const PROGRAMS: Program[] = [
     language: ["Английский"],
     cost: 2400,
     costLabel: "2 400 000 ₸/год",
-    deadline: "2025-05-30",
-    deadlineLabel: "30 мая 2025",
+    deadline: "2026-05-30",
+    deadlineLabel: "30 мая 2026",
+    degree: "Магистратура",
     duration: "2 года",
     bolashak: true,
     tags: ["Нефть", "Газ", "Энергетика"],
@@ -233,6 +240,7 @@ export const PROGRAMS: Program[] = [
 
 export const CITIES = ["Все города", "Алматы", "Астана", "Шымкент", "Актобе"];
 export const LANGUAGES = ["Казахский", "Русский", "Английский"];
+export const DEGREES = ["Все степени", "Бакалавриат", "Магистратура", "PhD"];
 export const FIELDS = [
   "Все направления",
   "Бизнес",

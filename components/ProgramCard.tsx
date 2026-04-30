@@ -16,7 +16,7 @@ import type { Program } from "@/lib/data";
 import { type StudyProfile, useAuthStore } from "@/lib/auth-store";
 import { useCompareStore } from "@/lib/compare-store";
 
-const PROFILE_MATCH_KEYS: (keyof StudyProfile)[] = ["field", "city", "language"];
+const PROFILE_MATCH_KEYS: (keyof StudyProfile)[] = ["targetDegree", "field", "city", "language"];
 
 function hasProfileDataForMatch(profile?: StudyProfile) {
   return Boolean(profile && PROFILE_MATCH_KEYS.every((key) => String(profile[key] ?? "").trim()));

@@ -4,14 +4,44 @@ import { useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Search, SlidersHorizontal, X, Award } from "lucide-react";
-import { PROGRAMS, CITIES, LANGUAGES, FIELDS } from "@/lib/data";
+import { PROGRAMS, CITIES, LANGUAGES, FIELDS, DEGREES } from "@/lib/data";
 import { ProgramCard } from "@/components/ProgramCard";
 
 const ALL_CITIES = "Все города";
 const ALL_FIELDS = "Все направления";
+const ALL_DEGREES = "Все степени";
 const MAX_COST = 3000;
 
 type SortBy = "cost-asc" | "cost-desc" | "deadline" | "rating";
+type DeadlineFilter = "all" | "soon" | "later" | "past";
+
+const DEADLINE_FILTER_LABELS: Record<DeadlineFilter, string> = {
+  all: "Любой срок",
+  soon: "Ближайшие 30 дней",
+  later: "Позже 30 дней",
+  past: "Срок прошел",
+};
+
+const DAY_IN_MS = 1000 * 60 * 60 * 24;
+
+function getDaysUntil(date: string) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const deadline = new Date(date);
+  deadline.setHours(0, 0, 0, 0);
+
+  return Math.ceil((deadline.getTime() - today.getTime()) / DAY_IN_MS);
+}
+
+function matchesDeadlineFilter(date: string, filter: DeadlineFilter) {
+  if (filter === "all") return true;
+
+  const daysUntil = getDaysUntil(date);
+  if (filter === "soon") return daysUntil >= 0 && daysUntil <= 30;
+  if (filter === "later") return daysUntil > 30;
+  return daysUntil < 0;
+}
 
 function formatProgramCount(count: number) {
   const lastDigit = count % 10;
@@ -33,6 +63,8 @@ function ProgramsContent() {
   const [query, setQuery] = useState(initialQ);
   const [city, setCity] = useState(ALL_CITIES);
   const [field, setField] = useState(ALL_FIELDS);
+  const [degree, setDegree] = useState(ALL_DEGREES);
+  const [deadlineFilter, setDeadlineFilter] = useState<DeadlineFilter>("all");
   const [langs, setLangs] = useState<string[]>([]);
   const [bolashak, setBolashak] = useState(initialBolashak);
   const [maxCost, setMaxCost] = useState(MAX_COST);
@@ -46,6 +78,8 @@ function ProgramsContent() {
     setQuery("");
     setCity(ALL_CITIES);
     setField(ALL_FIELDS);
+    setDegree(ALL_DEGREES);
+    setDeadlineFilter("all");
     setLangs([]);
     setBolashak(false);
     setMaxCost(MAX_COST);
@@ -59,6 +93,8 @@ function ProgramsContent() {
           !p.tags.some((t) => t.toLowerCase().includes(query.toLowerCase()))) return false;
       if (city !== ALL_CITIES && p.city !== city) return false;
       if (field !== ALL_FIELDS && p.field !== field) return false;
+      if (degree !== ALL_DEGREES && p.degree !== degree) return false;
+      if (!matchesDeadlineFilter(p.deadline, deadlineFilter)) return false;
       if (langs.length > 0 && !langs.some((l) => p.language.includes(l))) return false;
       if (bolashak && !p.bolashak) return false;
       if (p.cost > maxCost) return false;
@@ -71,7 +107,7 @@ function ProgramsContent() {
       if (sortBy === "deadline") return a.deadline.localeCompare(b.deadline);
       return b.rating - a.rating;
     });
-  }, [query, city, field, langs, bolashak, maxCost, sortBy]);
+  }, [query, city, field, degree, deadlineFilter, langs, bolashak, maxCost, sortBy]);
 
   const activeFilters = useMemo(() => {
     const filters: { key: string; label: string; onRemove: () => void }[] = [];
@@ -84,6 +120,16 @@ function ProgramsContent() {
     }
     if (field !== ALL_FIELDS) {
       filters.push({ key: "field", label: field, onRemove: () => setField(ALL_FIELDS) });
+    }
+    if (degree !== ALL_DEGREES) {
+      filters.push({ key: "degree", label: degree, onRemove: () => setDegree(ALL_DEGREES) });
+    }
+    if (deadlineFilter !== "all") {
+      filters.push({
+        key: "deadline",
+        label: DEADLINE_FILTER_LABELS[deadlineFilter],
+        onRemove: () => setDeadlineFilter("all"),
+      });
     }
     langs.forEach((lang) => {
       filters.push({
@@ -104,7 +150,7 @@ function ProgramsContent() {
     }
 
     return filters;
-  }, [query, city, field, langs, bolashak, maxCost]);
+  }, [query, city, field, degree, deadlineFilter, langs, bolashak, maxCost]);
 
   const hasFilters = activeFilters.length > 0;
 
@@ -210,6 +256,8 @@ function ProgramsContent() {
           <FilterPanel
             city={city} setCity={setCity}
             field={field} setField={setField}
+            degree={degree} setDegree={setDegree}
+            deadlineFilter={deadlineFilter} setDeadlineFilter={setDeadlineFilter}
             langs={langs} toggleLang={toggleLang}
             bolashak={bolashak} setBolashak={setBolashak}
             maxCost={maxCost} setMaxCost={setMaxCost}
@@ -230,6 +278,8 @@ function ProgramsContent() {
               <FilterPanel
                 city={city} setCity={setCity}
                 field={field} setField={setField}
+                degree={degree} setDegree={setDegree}
+                deadlineFilter={deadlineFilter} setDeadlineFilter={setDeadlineFilter}
                 langs={langs} toggleLang={toggleLang}
                 bolashak={bolashak} setBolashak={setBolashak}
                 maxCost={maxCost} setMaxCost={setMaxCost}
@@ -279,12 +329,15 @@ function ProgramsContent() {
 /* ── Filter panel ──────────────────────────────────────────────── */
 function FilterPanel({
   city, setCity, field, setField,
+  degree, setDegree, deadlineFilter, setDeadlineFilter,
   langs, toggleLang, bolashak, setBolashak,
   maxCost, setMaxCost, sortBy, setSortBy,
   onReset, hasFilters,
 }: {
   city: string; setCity: (v: string) => void;
   field: string; setField: (v: string) => void;
+  degree: string; setDegree: (v: string) => void;
+  deadlineFilter: DeadlineFilter; setDeadlineFilter: (v: DeadlineFilter) => void;
   langs: string[]; toggleLang: (l: string) => void;
   bolashak: boolean; setBolashak: (v: boolean) => void;
   maxCost: number; setMaxCost: (v: number) => void;
@@ -348,6 +401,32 @@ function FilterPanel({
           className="w-full bg-ink-50 dark:bg-ink-950 border border-ink-200 dark:border-ink-800 rounded-lg px-3 py-2 text-sm text-ink-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
         >
           {FIELDS.map((f) => <option key={f}>{f}</option>)}
+        </select>
+      </div>
+
+      {/* Degree */}
+      <div className="mb-4">
+        <label className="block text-xs font-semibold text-ink-500 dark:text-ink-400 uppercase tracking-wider mb-2">Степень обучения</label>
+        <select
+          value={degree}
+          onChange={(e) => setDegree(e.target.value)}
+          className="w-full bg-ink-50 dark:bg-ink-950 border border-ink-200 dark:border-ink-800 rounded-lg px-3 py-2 text-sm text-ink-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+        >
+          {DEGREES.map((d) => <option key={d}>{d}</option>)}
+        </select>
+      </div>
+
+      {/* Deadline */}
+      <div className="mb-4">
+        <label className="block text-xs font-semibold text-ink-500 dark:text-ink-400 uppercase tracking-wider mb-2">Дедлайн</label>
+        <select
+          value={deadlineFilter}
+          onChange={(e) => setDeadlineFilter(e.target.value as DeadlineFilter)}
+          className="w-full bg-ink-50 dark:bg-ink-950 border border-ink-200 dark:border-ink-800 rounded-lg px-3 py-2 text-sm text-ink-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+        >
+          {(Object.keys(DEADLINE_FILTER_LABELS) as DeadlineFilter[]).map((value) => (
+            <option key={value} value={value}>{DEADLINE_FILTER_LABELS[value]}</option>
+          ))}
         </select>
       </div>
 
