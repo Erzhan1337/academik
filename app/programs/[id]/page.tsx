@@ -44,10 +44,11 @@ export default function ProgramDetailPage({
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+    <div className="min-h-screen bg-slate-50 text-ink-950 dark:bg-[#070a12] dark:text-white">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
       {/* Back */}
       <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
-        <Link href="/programs" className="inline-flex items-center gap-1.5 text-sm text-ink-500 hover:text-ink-900 transition-colors mb-6">
+        <Link href="/programs" className="inline-flex items-center gap-1.5 text-sm text-ink-500 hover:text-ink-900 transition-colors mb-6 dark:text-ink-400 dark:hover:text-white">
           <ArrowLeft className="w-4 h-4" /> Назад к каталогу
         </Link>
       </motion.div>
@@ -59,27 +60,28 @@ export default function ProgramDetailPage({
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl border border-ink-200 p-6 mb-5"
+            className="bg-white rounded-2xl border border-ink-200 p-6 mb-5 shadow-sm dark:bg-ink-950 dark:border-ink-800"
           >
             <div className="flex flex-wrap items-center gap-2 mb-3">
               {program.bolashak && (
-                <span className="tag-pill-gold flex items-center gap-1">
+                <span className="inline-flex items-center gap-1 rounded-md bg-amber-100 px-2 py-1 text-[11px] font-semibold text-amber-900 dark:bg-amber-500/15 dark:text-amber-300">
                   <Award className="w-3 h-3" /> Болашак
                 </span>
               )}
-              <span className="tag-pill">{program.field}</span>
+              <span className="tag-pill dark:bg-brand-500/10 dark:text-brand-300 dark:border-brand-500/20">{program.field}</span>
+              <span className="tag-pill dark:bg-brand-500/10 dark:text-brand-300 dark:border-brand-500/20">{program.degree}</span>
               {program.tags.map((t) => (
-                <span key={t} className="tag-pill">{t}</span>
+                <span key={t} className="tag-pill dark:bg-brand-500/10 dark:text-brand-300 dark:border-brand-500/20">{t}</span>
               ))}
             </div>
             <h1
-              className="text-2xl sm:text-3xl font-bold text-ink-900 mb-2 leading-snug"
+              className="text-2xl sm:text-3xl font-bold text-ink-900 mb-2 leading-snug dark:text-white"
               style={{ fontFamily: "var(--font-display)" }}
             >
               {program.title}
             </h1>
-            <p className="text-ink-500 mb-4">{program.university}</p>
-            <div className="flex flex-wrap gap-4 text-sm text-ink-500">
+            <p className="text-ink-500 mb-4 dark:text-ink-400">{program.university}</p>
+            <div className="flex flex-wrap gap-4 text-sm text-ink-500 dark:text-ink-400">
               <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" />{program.city}</span>
               <span className="flex items-center gap-1.5"><Clock className="w-4 h-4" />{program.duration}</span>
               <span className="flex items-center gap-1.5"><Globe className="w-4 h-4" />{program.language.join(", ")}</span>
@@ -95,16 +97,16 @@ export default function ProgramDetailPage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white rounded-2xl border border-ink-200 overflow-hidden"
+            className="bg-white rounded-2xl border border-ink-200 overflow-hidden shadow-sm dark:bg-ink-950 dark:border-ink-800"
           >
             {/* Tab bar */}
-            <div className="flex border-b border-ink-100 overflow-x-auto">
+            <div className="flex border-b border-ink-100 overflow-x-auto dark:border-ink-800">
               {TABS.map((t) => (
                 <button
                   key={t}
                   onClick={() => setTab(t)}
                   className={`relative px-5 py-4 text-sm font-medium whitespace-nowrap transition-colors ${
-                    tab === t ? "text-brand-600" : "text-ink-500 hover:text-ink-900"
+                    tab === t ? "text-brand-600 dark:text-brand-300" : "text-ink-500 hover:text-ink-900 dark:text-ink-400 dark:hover:text-white"
                   }`}
                 >
                   {tab === t && (
@@ -124,7 +126,7 @@ export default function ProgramDetailPage({
                 {tab === "Обзор" && (
                   <motion.div key="overview"
                     initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
-                    <p className="text-ink-600 leading-relaxed">{program.description}</p>
+                    <p className="text-ink-600 leading-relaxed dark:text-ink-300">{program.description}</p>
                   </motion.div>
                 )}
                 {tab === "Требования" && (
@@ -137,7 +139,7 @@ export default function ProgramDetailPage({
                           initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.05 }}
-                          className="flex items-start gap-3 text-sm text-ink-700"
+                          className="flex items-start gap-3 text-sm text-ink-700 dark:text-ink-200"
                         >
                           <CheckCircle2 className="w-4 h-4 text-brand-500 mt-0.5 shrink-0" />
                           {r}
@@ -152,10 +154,10 @@ export default function ProgramDetailPage({
                     {/* Progress */}
                     <div className="mb-5">
                       <div className="flex items-center justify-between mb-2 text-sm">
-                        <span className="font-medium text-ink-700">Прогресс сбора</span>
-                        <span className="font-bold text-brand-600">{checked.length}/{program.documents.length}</span>
+                        <span className="font-medium text-ink-700 dark:text-ink-200">Прогресс сбора</span>
+                        <span className="font-bold text-brand-600 dark:text-brand-300">{checked.length}/{program.documents.length}</span>
                       </div>
-                      <div className="progress-bar">
+                      <div className="progress-bar dark:bg-ink-800">
                         <motion.div
                           className="progress-bar-fill"
                           animate={{ width: `${progress}%` }}
@@ -176,13 +178,13 @@ export default function ProgramDetailPage({
                             <label className="flex items-center gap-3 cursor-pointer group">
                               <input type="checkbox" className="sr-only" checked={done} onChange={() => toggleDoc(doc)} />
                               <motion.div whileTap={{ scale: 0.9 }}
-                                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${done ? "border-brand-500 bg-brand-500" : "border-ink-300 group-hover:border-brand-400"}`}
+                                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${done ? "border-brand-500 bg-brand-500" : "border-ink-300 group-hover:border-brand-400 dark:border-ink-700 dark:group-hover:border-brand-400"}`}
                               >
                                 {done && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
                                   <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                                 </motion.div>}
                               </motion.div>
-                              <span className={`text-sm transition-colors ${done ? "line-through text-ink-400" : "text-ink-700"}`}>
+                              <span className={`text-sm transition-colors ${done ? "line-through text-ink-400 dark:text-ink-500" : "text-ink-700 dark:text-ink-200"}`}>
                                 {doc}
                               </span>
                             </label>
@@ -195,16 +197,16 @@ export default function ProgramDetailPage({
                 {tab === "Сроки" && (
                   <motion.div key="deadlines"
                     initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
-                    <div className="flex items-center gap-4 p-4 bg-amber-50 rounded-xl border border-amber-200 mb-4">
+                    <div className="flex items-center gap-4 p-4 bg-amber-50 rounded-xl border border-amber-200 mb-4 dark:bg-amber-500/10 dark:border-amber-500/20">
                       <Calendar className="w-8 h-8 text-amber-500 shrink-0" />
                       <div>
-                        <div className="font-semibold text-ink-900">Срок подачи</div>
-                        <div className="text-2xl font-bold text-amber-600" style={{ fontFamily: "var(--font-display)" }}>
+                        <div className="font-semibold text-ink-900 dark:text-white">Срок подачи</div>
+                        <div className="text-2xl font-bold text-amber-600 dark:text-amber-300" style={{ fontFamily: "var(--font-display)" }}>
                           {program.deadlineLabel}
                         </div>
                       </div>
                     </div>
-                    <p className="text-sm text-ink-500 leading-relaxed">
+                    <p className="text-sm text-ink-500 leading-relaxed dark:text-ink-400">
                       Убедитесь, что документы готовы заранее. Рекомендуем начать подготовку за 4–6 недель до срока подачи.
                     </p>
                   </motion.div>
@@ -252,12 +254,12 @@ export default function ProgramDetailPage({
                     <div>
                       <h3 className="font-bold text-ink-900 dark:text-white mb-4">Часто задаваемые вопросы</h3>
                       <div className="flex flex-col gap-3">
-                        <div className="border border-ink-200 dark:border-ink-800 rounded-xl p-4">
-                          <div className="font-semibold text-sm mb-1 dark:text-white">Есть ли общежитие?</div>
+                        <div className="border border-ink-200 bg-white dark:bg-ink-900 dark:border-ink-800 rounded-xl p-4">
+                          <div className="font-semibold text-sm text-ink-900 mb-1 dark:text-white">Есть ли общежитие?</div>
                           <p className="text-sm text-ink-500 dark:text-ink-400">Да, университет предоставляет места для студентов магистратуры при наличии квоты.</p>
                         </div>
-                        <div className="border border-ink-200 dark:border-ink-800 rounded-xl p-4">
-                          <div className="font-semibold text-sm mb-1 dark:text-white">Возможно ли обучение онлайн?</div>
+                        <div className="border border-ink-200 bg-white dark:bg-ink-900 dark:border-ink-800 rounded-xl p-4">
+                          <div className="font-semibold text-sm text-ink-900 mb-1 dark:text-white">Возможно ли обучение онлайн?</div>
                           <p className="text-sm text-ink-500 dark:text-ink-400">По правилам Болашак онлайн-обучение не допускается. Формат — очно.</p>
                         </div>
                       </div>
@@ -278,11 +280,11 @@ export default function ProgramDetailPage({
           className="flex flex-col gap-4"
         >
           {/* Cost card */}
-          <div className="bg-white rounded-2xl border border-ink-200 p-5">
-            <div className="text-2xl font-bold text-ink-900 mb-0.5" style={{ fontFamily: "var(--font-display)" }}>
+          <div className="bg-white rounded-2xl border border-ink-200 p-5 shadow-sm dark:bg-ink-950 dark:border-ink-800">
+            <div className="text-2xl font-bold text-ink-900 mb-0.5 dark:text-white" style={{ fontFamily: "var(--font-display)" }}>
               {program.costLabel}
             </div>
-            <div className="text-sm text-ink-400 mb-5">в год</div>
+            <div className="text-sm text-ink-400 mb-5 dark:text-ink-500">в год</div>
 
             <div className="flex flex-col gap-2">
               <button
@@ -309,13 +311,13 @@ export default function ProgramDetailPage({
                 className={`w-full flex items-center justify-center gap-2 text-sm font-semibold py-2.5 rounded-xl border transition-colors ${
                   inFavorites
                     ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-transparent"
-                    : "bg-ink-50 dark:bg-ink-900 text-ink-700 dark:text-ink-300 border-ink-200 dark:border-ink-800 hover:bg-emerald-50 hover:text-emerald-700"
+                    : "bg-ink-50 dark:bg-ink-900 text-ink-700 dark:text-ink-300 border-ink-200 dark:border-ink-800 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400"
                 }`}
               >
                 <Calendar className="w-4 h-4" />
                 {inFavorites ? "В календаре ✓" : "Добавить в календарь"}
               </button>
-              <button className="w-full flex items-center justify-center gap-2 bg-ink-900 text-white text-sm font-semibold py-2.5 rounded-xl opacity-50 cursor-not-allowed">
+              <button className="w-full flex items-center justify-center gap-2 bg-ink-900 text-white text-sm font-semibold py-2.5 rounded-xl opacity-50 cursor-not-allowed dark:bg-white dark:text-ink-950">
                 Подать заявку
                 <span className="text-[10px] font-normal opacity-70">— скоро</span>
               </button>
@@ -323,19 +325,20 @@ export default function ProgramDetailPage({
           </div>
 
           {/* Quick stats */}
-          <div className="bg-white rounded-2xl border border-ink-200 p-5">
-            <h4 className="font-semibold text-ink-900 text-sm mb-3">Информация</h4>
+          <div className="bg-white rounded-2xl border border-ink-200 p-5 shadow-sm dark:bg-ink-950 dark:border-ink-800">
+            <h4 className="font-semibold text-ink-900 text-sm mb-3 dark:text-white">Информация</h4>
             <div className="flex flex-col gap-2.5 text-sm">
               {[
                 ["Город", program.city],
+                ["Степень", program.degree],
                 ["Длительность", program.duration],
                 ["Язык", program.language.join(", ")],
                 ["Студенты", program.students.toLocaleString("ru")],
                 ["Болашак", program.bolashak ? "✓ Подходит" : "✗ Нет"],
               ].map(([k, v]) => (
                 <div key={k} className="flex items-center justify-between">
-                  <span className="text-ink-500">{k}</span>
-                  <span className={`font-medium ${k === "Болашак" && program.bolashak ? "text-amber-600" : "text-ink-800"}`}>{v}</span>
+                  <span className="text-ink-500 dark:text-ink-400">{k}</span>
+                  <span className={`font-medium ${k === "Болашак" && program.bolashak ? "text-amber-600 dark:text-amber-300" : "text-ink-800 dark:text-ink-100"}`}>{v}</span>
                 </div>
               ))}
             </div>
@@ -357,19 +360,19 @@ export default function ProgramDetailPage({
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+              className="bg-white rounded-2xl border border-ink-200 p-6 max-w-sm w-full shadow-2xl dark:bg-ink-950 dark:border-ink-800"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-ink-900">Напоминание о сроке подачи</h3>
-                <button onClick={() => setShowModal(false)} className="text-ink-400 hover:text-ink-700">
+                <h3 className="font-bold text-ink-900 dark:text-white">Напоминание о сроке подачи</h3>
+                <button onClick={() => setShowModal(false)} className="text-ink-400 hover:text-ink-700 dark:text-ink-500 dark:hover:text-white">
                   <X className="w-5 h-5" />
                 </button>
               </div>
               {!submitted ? (
                 <form onSubmit={handleReminderSubmit}>
-                  <p className="text-sm text-ink-500 mb-4">
+                  <p className="text-sm text-ink-500 mb-4 dark:text-ink-400">
                     Мы пришлём напоминание на email за неделю до срока подачи{" "}
-                    <strong className="text-amber-600">{program.deadlineLabel}</strong>.
+                    <strong className="text-amber-600 dark:text-amber-300">{program.deadlineLabel}</strong>.
                   </p>
                   <input
                     type="email"
@@ -377,7 +380,7 @@ export default function ProgramDetailPage({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="w-full border border-ink-200 rounded-xl px-4 py-2.5 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    className="w-full border border-ink-200 rounded-xl px-4 py-2.5 text-sm mb-4 text-ink-900 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-ink-900 dark:border-ink-800 dark:text-white"
                   />
                   <button
                     type="submit"
@@ -393,14 +396,15 @@ export default function ProgramDetailPage({
                   className="text-center py-4"
                 >
                   <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-2" />
-                  <p className="font-semibold text-ink-900">Готово!</p>
-                  <p className="text-sm text-ink-500 mt-1">Напоминание будет отправлено на {email}</p>
+                  <p className="font-semibold text-ink-900 dark:text-white">Готово!</p>
+                  <p className="text-sm text-ink-500 mt-1 dark:text-ink-400">Напоминание будет отправлено на {email}</p>
                 </motion.div>
               )}
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }
