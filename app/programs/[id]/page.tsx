@@ -14,7 +14,7 @@ import { PROGRAMS } from "@/lib/data";
 import { useAuthStore } from "@/lib/auth-store";
 import { useCompareStore } from "@/lib/compare-store";
 
-const TABS = ["Обзор", "Требования", "Документы", "Сроки", "Отзывы и вопросы"] as const;
+const TABS = ["Обзор", "Требования", "Документы", "Сроки", "Вопросы"] as const;
 const REMINDER_OPTIONS = [30, 14, 7, 1];
 
 export default function ProgramDetailPage({
@@ -247,60 +247,31 @@ export default function ProgramDetailPage({
                     </p>
                   </motion.div>
                 )}
-                {tab === "Отзывы и вопросы" && (
-                  <motion.div key="reviews"
+                {tab === "Вопросы" && (
+                  <motion.div key="questions"
                     initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
-                    
-                    <div className="mb-8">
-                      <h3 className="font-bold text-ink-900 dark:text-white mb-4">Отзывы студентов</h3>
-                      <div className="flex flex-col gap-4">
-                        <div className="bg-ink-50 dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl p-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="font-semibold text-ink-900 dark:text-white text-sm">Айгерим С.</span>
-                            <div className="flex items-center text-gold-500">
-                              <Star className="w-3.5 h-3.5 fill-gold-500" />
-                              <Star className="w-3.5 h-3.5 fill-gold-500" />
-                              <Star className="w-3.5 h-3.5 fill-gold-500" />
-                              <Star className="w-3.5 h-3.5 fill-gold-500" />
-                              <Star className="w-3.5 h-3.5 fill-gold-500" />
-                            </div>
-                          </div>
-                          <p className="text-sm text-ink-600 dark:text-ink-400">
-                            "Отличная программа, помогла мне устроиться в международную компанию. Преподаватели — практики с огромным опытом. Однозначно рекомендую!"
-                          </p>
-                        </div>
-                        <div className="bg-ink-50 dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl p-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="font-semibold text-ink-900 dark:text-white text-sm">Ильяс Н.</span>
-                            <div className="flex items-center text-gold-500">
-                              <Star className="w-3.5 h-3.5 fill-gold-500" />
-                              <Star className="w-3.5 h-3.5 fill-gold-500" />
-                              <Star className="w-3.5 h-3.5 fill-gold-500" />
-                              <Star className="w-3.5 h-3.5 fill-gold-500" />
-                              <Star className="w-3.5 h-3.5" />
-                            </div>
-                          </div>
-                          <p className="text-sm text-ink-600 dark:text-ink-400">
-                            "Обучение интенсивное, особенно на втором семестре. Было тяжело совмещать с работой. Но качество знаний на высоте."
-                          </p>
-                        </div>
+                    <div className="flex flex-col gap-3">
+                      <div className="border border-ink-200 bg-white dark:bg-ink-900 dark:border-ink-800 rounded-xl p-4">
+                        <div className="font-semibold text-sm text-ink-900 mb-1 dark:text-white">Какая это степень обучения?</div>
+                        <p className="text-sm text-ink-500 dark:text-ink-400">{program.degree}, длительность программы — {program.duration}.</p>
+                      </div>
+                      <div className="border border-ink-200 bg-white dark:bg-ink-900 dark:border-ink-800 rounded-xl p-4">
+                        <div className="font-semibold text-sm text-ink-900 mb-1 dark:text-white">На каком языке проходит обучение?</div>
+                        <p className="text-sm text-ink-500 dark:text-ink-400">{program.language.join(", ")}.</p>
+                      </div>
+                      <div className="border border-ink-200 bg-white dark:bg-ink-900 dark:border-ink-800 rounded-xl p-4">
+                        <div className="font-semibold text-sm text-ink-900 mb-1 dark:text-white">Когда дедлайн подачи?</div>
+                        <p className="text-sm text-ink-500 dark:text-ink-400">Срок подачи: {program.deadlineLabel}. Добавьте программу в календарь, чтобы отслеживать дедлайн.</p>
+                      </div>
+                      <div className="border border-ink-200 bg-white dark:bg-ink-900 dark:border-ink-800 rounded-xl p-4">
+                        <div className="font-semibold text-sm text-ink-900 mb-1 dark:text-white">Какие документы смотреть в первую очередь?</div>
+                        <p className="text-sm text-ink-500 dark:text-ink-400">Начните с вкладки “Документы”: там полный список для этой программы и чекбоксы для отслеживания подготовки.</p>
+                      </div>
+                      <div className="border border-ink-200 bg-white dark:bg-ink-900 dark:border-ink-800 rounded-xl p-4">
+                        <div className="font-semibold text-sm text-ink-900 mb-1 dark:text-white">Подходит ли программа для Болашак?</div>
+                        <p className="text-sm text-ink-500 dark:text-ink-400">{program.bolashak ? "Да, программа отмечена как подходящая для Болашак." : "В текущих данных программа не отмечена как подходящая для Болашак."}</p>
                       </div>
                     </div>
-
-                    <div>
-                      <h3 className="font-bold text-ink-900 dark:text-white mb-4">Часто задаваемые вопросы</h3>
-                      <div className="flex flex-col gap-3">
-                        <div className="border border-ink-200 bg-white dark:bg-ink-900 dark:border-ink-800 rounded-xl p-4">
-                          <div className="font-semibold text-sm text-ink-900 mb-1 dark:text-white">Есть ли общежитие?</div>
-                          <p className="text-sm text-ink-500 dark:text-ink-400">Да, университет предоставляет места для студентов магистратуры при наличии квоты.</p>
-                        </div>
-                        <div className="border border-ink-200 bg-white dark:bg-ink-900 dark:border-ink-800 rounded-xl p-4">
-                          <div className="font-semibold text-sm text-ink-900 mb-1 dark:text-white">Возможно ли обучение онлайн?</div>
-                          <p className="text-sm text-ink-500 dark:text-ink-400">По правилам Болашак онлайн-обучение не допускается. Формат — очно.</p>
-                        </div>
-                      </div>
-                    </div>
-
                   </motion.div>
                 )}
               </AnimatePresence>

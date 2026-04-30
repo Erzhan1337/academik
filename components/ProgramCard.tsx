@@ -10,7 +10,6 @@ import {
   Clock,
   Globe2,
   MapPin,
-  Star,
 } from "lucide-react";
 import type { Program } from "@/lib/data";
 import { type StudyProfile, useAuthStore } from "@/lib/auth-store";
@@ -95,10 +94,6 @@ export function ProgramCard({
                   <span>Заполните профиль</span>
                 </div>
               )}
-              <div className="inline-flex items-center gap-1 rounded-md bg-ink-100 px-2 py-1 text-sm font-semibold text-ink-900 dark:bg-ink-800 dark:text-white">
-                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                <span>{program.rating}</span>
-              </div>
             </div>
           </div>
 
